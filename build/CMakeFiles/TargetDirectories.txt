@@ -1,0 +1,3 @@
+/home/michael/graduation project/build/CMakeFiles/rebuild_cache.dir
+/home/michael/graduation project/build/CMakeFiles/edit_cache.dir
+/home/michael/graduation project/build/CMakeFiles/main.dir

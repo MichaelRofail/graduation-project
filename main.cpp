@@ -1,23 +1,24 @@
 #include "ImageProcessing.h"
 
+using namespace std;
+
 int main(){
 
 	VideoCapture cam(0);
 
-	Mat frame;// = imread("frame.png",1);//read image
-	Mat image1;// = imread("frame.png",0);//force image2 into type uchar
-	cam.read(image1);
-	cvtColor(image1, image1, COLOR_RGB2GRAY);
+	Mat frame ,image1,image2;
 
 	while(1){
 		cam.read(frame);
-		ImageProcessing::preProcess(frame,image1);//preprocess
+
+		image1 = ImageProcessing::preProcess(frame);//preprocess
+		image2 = ImageProcessing::crop(image1);
 
 	   	namedWindow("orig Image", WINDOW_AUTOSIZE );
 	    imshow("orig Image",frame);
 
 	    namedWindow("Image1", WINDOW_AUTOSIZE );
-	    imshow("Image1",image1);
+	    imshow("Image1",image2);
 	    waitKey(25);
 	}
 }
