@@ -25,7 +25,6 @@ Mat ImageProcessing::crop(Mat& input){
     Mat output = input(Rect(input.cols/2,0,input.cols/2,input.rows));
     return output;
 }
-float* extractPoints(const Mat& input){
-    float* arr = new float[input.rows];
-    return arr;
+void ImageProcessing::extractPoints(const Mat& inputMat, float** arr){
+
 }
