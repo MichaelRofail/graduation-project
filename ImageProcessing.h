@@ -9,8 +9,10 @@ using namespace cv;
 class ImageProcessing{
 public:
     static Mat preProcess(const Mat&); //change the rgb photo to a single channel and filter out a range of color
-    static void getThreshold(uchar&, uchar&, uchar&, uchar&, uchar&, uchar&);//return the color range for the preprocess image
     static Mat crop(Mat&);//crops the image to include on the object
+    static float* extractPoints(const Mat&);
+private:
+    static void getThreshold(uchar&, uchar&, uchar&, uchar&, uchar&, uchar&);//return the color range for the preprocess image    
 };
 
 #endif
