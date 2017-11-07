@@ -6,6 +6,8 @@
 
 #IncludeRegexTransform: 
 
+/home/michael/graduation project/DataProcessing.h
+
 /home/michael/graduation project/ImageProcessing.cpp
 ImageProcessing.h
 /home/michael/graduation project/ImageProcessing.h
@@ -19,6 +21,8 @@ opencv2/opencv.hpp
 /home/michael/graduation project/main.cpp
 ImageProcessing.h
 /home/michael/graduation project/ImageProcessing.h
+DataProcessing.h
+/home/michael/graduation project/DataProcessing.h
 
 /usr/local/include/opencv/cxcore.h
 opencv2/core/core_c.h
