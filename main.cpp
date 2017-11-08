@@ -12,6 +12,7 @@ int main(){
 	Mat frame, image1, cropped;
 	ostringstream temp;// holds the name for the frame to be saved
 
+	
 	for(int i = 0; i < NUM_OF_STEPS ;i++){
 		cam.read(frame);
 
