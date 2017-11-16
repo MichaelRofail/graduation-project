@@ -1,6 +1,9 @@
 #include "ImageProcessing.h"
 #include "DataProcessing.h"
+#include <pcl/io/pcd_io.h>
+#include <pcl/point_types.h>
 
+ //number of images taken as the object rotates and equal to the rotation steps my the motor
 #define NUM_OF_STEPS 360
 
 using namespace std;
@@ -34,11 +37,16 @@ int main(){
 		waitKey(25);
 	}
 
-	float** arr = new float*[cropped.rows];//holds output points in 2d
-	for(int i = 0; i<cropped.rows;i++){
-		arr[i] = new float[2];
-	}
-	for(int i = 0; i < NUM_OF_STEPS ;i++){//post processing loop that extracts points from frames
+	float* arr = new float[cropped.rows];//holds output points from each frame in 2d
+	pcl::PointCloud<pcl::PointXYZ> cloud; //stores the cloud
+
+ 	// Fill in the cloud data
+ 	cloud.width    = NUM_OF_STEPS;
+	cloud.height   = cropped.rows;
+	cloud.is_dense = false;
+	cloud.points.resize (cloud.width * cloud.height);
+
+	for(int i = 0; i < NUM_OF_STEPS; i++){//post processing loop that extracts points from frames
 		temp << i;
 		temp << ".png";
 		image1 = imread(temp.str(), 1);
