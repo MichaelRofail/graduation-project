@@ -27,12 +27,21 @@ Mat ImageProcessing::crop(Mat& input){
 }
 
 void ImageProcessing::extractPoints(Mat& inputMat, float* arr){
-
-    for( int i = 0; i < inputMat.rows; ++i)
-        for( int j = 0; j < inputMat.cols; ++j )
+    bool found;
+    for( int i = 0; i < inputMat.rows; ++i){
+        found = false;
+        for( int j = 0; j < inputMat.cols; ++j ){
             //if a pixel is white check next pixel if it is white too write the point in the array
-            if(inputMat.at<uchar>(i,j) == 255)
-                if(j < inputMat.cols - 1)
-                    if(inputMat.at<uchar>(i,j+1)) arr[i] = j;
-
+            if(inputMat.at<uchar>(i,j) == 255){
+                if(j < inputMat.cols - 1){
+                    if(inputMat.at<uchar>(i,j+1)){
+                        arr[i] = j;
+                        found = true;
+                    }
+                }
+            }    
+        }
+        //if no point is found on a line put -1 in the array
+        if(found == false)arr[i] = -1;
+    }
 }
