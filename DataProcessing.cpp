@@ -11,9 +11,9 @@ void DataProcessing::generateXYZ(PointCloud<PointXYZ>& cloud, float* arr, int ar
 
     for(int j = 0, i = (cloud.width - numOfPoints); i < cloud.width && j < arrSize;){
         if(arr[j] > 0){//if a point in the array not -1 add it to the cloud
-            cloud.points[i].x = arr[j]*cos(numOfSteps/(360*currentStep));
+            cloud.points[i].x = arr[j]*cos((360*currentStep)/numOfSteps);
             cloud.points[i].y = arrSize - j;
-            cloud.points[i].z = sqrt(cloud.points[i].x * cloud.points[i].x + arr[j] * arr[j]);
+            cloud.points[i].z = sqrt(arr[j] * arr[j] - cloud.points[i].x * cloud.points[i].x);
             j++;
             i++;
         }else{
