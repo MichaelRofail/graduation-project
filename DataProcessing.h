@@ -11,7 +11,7 @@ using namespace std;
 
 class DataProcessing{
     public:
-    //transforms xy points in an array to xyz an fill point cloud
+    //transforms xy points in an array to xyz and fill point cloud
     static void generateXYZ(PointCloud<PointXYZ>& , float*, int, int, int);
 };
 

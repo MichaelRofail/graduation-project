@@ -4,7 +4,6 @@
 //number of images taken as the object rotates and equal to the rotation steps my the motor
 #define NUM_OF_STEPS 360
 
-
 using namespace std;
 
 int main(){
@@ -20,10 +19,10 @@ int main(){
 		image1 = ImageProcessing::preProcess(frame);//preprocess
 		cropped[i] = ImageProcessing::crop(image1);
 
-	   	namedWindow("orig Image", WINDOW_AUTOSIZE );
-	    imshow("orig Image",frame);
+		namedWindow("orig Image", WINDOW_AUTOSIZE );
+		imshow("orig Image",frame);
 
-	    namedWindow("cropped", WINDOW_AUTOSIZE );
+		namedWindow("cropped", WINDOW_AUTOSIZE );
 		imshow("cropped",cropped[i]);
 		//step
 		waitKey(25);
@@ -39,6 +38,6 @@ int main(){
 		ImageProcessing::extractPoints(cropped[i],arr);
 		DataProcessing::generateXYZ(cloud, arr, cropped[i].rows, i, NUM_OF_STEPS);
 	}	
-	io::savePCDFileASCII ("my_point_cloud.pcd", cloud);
+	io::savePCDFileASCII ("my_point_cloud.pcd", cloud);//save the cloud to a file
 		
 }
