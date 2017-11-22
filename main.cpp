@@ -4,6 +4,7 @@
 //number of images taken as the object rotates and equal to the rotation steps my the motor
 #define NUM_OF_STEPS 360
 
+
 using namespace std;
 
 int main(){
