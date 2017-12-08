@@ -10,13 +10,14 @@ void DataProcessing::generateXYZ(PointCloud<PointXYZ>& cloud, float* arr, int ar
     cloud.height = 1;
     cloud.points.resize (cloud.width * cloud.height);//resize the cloud to make space for more points
 
+    angle = (360 * currentStep) / numOfSteps;
+    angle = (angle / 180) * 3.14159265; //convert to rad
+    float cosAngle = cos(angle), sinAngle = sin(angle);//for optimization
     for(int j = 0, i = (cloud.width - numOfPoints); i < cloud.width && j < arrSize; j++){
         if(arr[j] > 0){//if a point in the array not -1 add it to the cloud
-            angle = (360*currentStep)/numOfSteps;
-            cloud.points[i].x = arr[j]*cos(angle);
+            cloud.points[i].x = arr[j]*cosAngle;
             cloud.points[i].y = arrSize - j;
-            if(angle < 180)cloud.points[i].z = -1 * sqrt(arr[j] * arr[j] - cloud.points[i].x * cloud.points[i].x);
-            else cloud.points[i].z = sqrt(arr[j] * arr[j] - cloud.points[i].x * cloud.points[i].x);
+            cloud.points[i].z = arr[j]*sinAngle;
             i++;
         }
     }

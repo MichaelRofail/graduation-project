@@ -2,7 +2,7 @@
 #include "DataProcessing.h"
 
 //number of images taken as the object rotates and equal to the rotation steps my the motor
-#define NUM_OF_STEPS 360
+#define NUM_OF_STEPS 50
 
 using namespace std;
 
