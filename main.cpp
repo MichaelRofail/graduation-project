@@ -1,3 +1,8 @@
+/**This is the main file for the 3D scanner
+ * 
+ * Run this program with any argument for test mode where the program reads
+ *  images from the same folder instead of the camera 
+**/
 #include "ImageProcessing.h"
 #include "DataProcessing.h"
 
@@ -6,7 +11,7 @@
 
 using namespace std;
 
-int main(){
+int main(int argc, char** argv){
 
 	VideoCapture cam(0);
 
@@ -14,8 +19,10 @@ int main(){
 	Mat cropped[NUM_OF_STEPS];//stores all the photos after processing
 
 	for(int i = 0; i < NUM_OF_STEPS ;i++){
-		cam.read(frame);
 
+		if(argc == 1)cam.read(frame);
+		else frame = imread("%d.jpg", i);
+		
 		image1 = ImageProcessing::preProcess(frame);//preprocess
 		cropped[i] = ImageProcessing::crop(image1);
 
