@@ -15,15 +15,23 @@ int main(int argc, char** argv){
 
 	VideoCapture cam(0);
 
-	Mat frame, image1;//temps
+	Mat frame, tmp, image1;//temps
 	Mat cropped[NUM_OF_STEPS];//stores all the photos after processing
 
 	for(int i = 0; i < NUM_OF_STEPS ;i++){
 
-		if(argc == 1)cam.read(frame);
-		else frame = imread("%d.jpg", i);
-		
-		image1 = ImageProcessing::preProcess(frame);//preprocess
+		if(argc == 1){
+			//turn on laser
+			cam.read(frame);
+			//turn off laser
+			waitkey(25);
+			cam.read(tmp);
+			frame = frame - tmp;
+		}else{
+			frame = imread("%dl.jpg", i);
+			tmp = imread("%d.jpg", i);
+			frame = frame - tmp;
+		} 
 		cropped[i] = ImageProcessing::crop(image1);
 
 		namedWindow("orig Image", WINDOW_AUTOSIZE );
