@@ -24,14 +24,16 @@ int main(int argc, char** argv){
 			//turn on laser
 			cam.read(frame);
 			//turn off laser
-			waitkey(25);
+			waitKey(25);
 			cam.read(tmp);
-			frame = frame - tmp;
 		}else{
 			frame = imread("%dl.jpg", i);
 			tmp = imread("%d.jpg", i);
-			frame = frame - tmp;
 		} 
+		
+		frame = frame - tmp;
+		cvtColor(frame, tmp, COLOR_BGR2GRAY);
+		threshold(tmp, image1, 200, 255, THRESH_BINARY);
 		cropped[i] = ImageProcessing::crop(image1);
 
 		namedWindow("orig Image", WINDOW_AUTOSIZE );
