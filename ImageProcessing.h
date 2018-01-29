@@ -3,12 +3,15 @@
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
+
+#define LASER_THRESHOLD 150 //threshold for the red laser color
+
 using namespace cv;
 
 
 class ImageProcessing{
 public:
-    static Mat preProcess(const Mat&); //change the rgb photo to a single channel and filter out a range of color
+    static Mat extractLaser(const Mat& laserFrame,const Mat& frame);
     static Mat crop(Mat&);//crops the image to include on the object
     static void extractPoints(Mat&, float*);//extract points from each line into an array
 private:
