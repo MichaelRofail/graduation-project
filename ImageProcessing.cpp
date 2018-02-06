@@ -1,10 +1,37 @@
 #include "ImageProcessing.h"
 
 Mat ImageProcessing::extractLaser(const Mat& laserFrame, const Mat& frame){
-    Mat subframe = laserFrame - frame;
-    extractChannel(subframe, subframe, 2); //extract red channel only 
-    threshold(subframe, subframe, LASER_THRESHOLD, 255,THRESH_BINARY);
-    return subframe;
+    Mat subframe = laserFrame - frame;//subtract the normal frame from the laser frame
+    Mat red , blue, green, output;
+
+    //extract each channel
+    extractChannel(subframe, red, 2); 
+    extractChannel(subframe, blue, 0);
+    extractChannel(subframe, green, 1);
+
+    unsigned char blue_thresh, green_thresh, red_thresh;
+    getThreshold(blue_thresh, green_thresh, red_thresh);
+
+    /**
+     *threshold each channel where the red has the lowest threshold.
+     *the subtraction can move the laser from the red channel to other channels depending
+     on the original color of the object.
+    **/
+    threshold(blue, blue, blue_thresh, 255, THRESH_BINARY);
+    threshold(green, green, green_thresh, 255, THRESH_BINARY);
+    threshold(red, red, red_thresh, 255, THRESH_BINARY);
+
+    //or all channels together after threshold
+    bitwise_or(blue, green, output);
+    bitwise_or(red, output, output);
+
+    return output;
+}
+
+void ImageProcessing::getThreshold(unsigned char& blue_thresh, unsigned char& green_thresh, unsigned char& red_thresh){
+    blue_thresh = 200;
+    green_thresh = 200;
+    red_thresh = 180;
 }
 
 Mat ImageProcessing::crop(Mat& input){
