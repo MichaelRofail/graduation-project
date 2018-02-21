@@ -15,6 +15,7 @@ public:
     static Mat crop(Mat&);//crops the image to include on the object
     static void extractPoints(Mat&, float*);//extract points from each line into an array   
 private:
+    //returnst the low threshold for each color to be used in extract laser function
     static void getThreshold(unsigned char& blue_thresh, unsigned char& green_thresh, unsigned char& red_thresh);
 };
 
