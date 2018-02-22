@@ -1,5 +1,7 @@
 #include "ImageProcessing.h"
 
+using namespace cv;
+
 Mat ImageProcessing::extractLaser(const Mat& laserFrame, const Mat& frame){
     Mat subframe = laserFrame - frame;//subtract the normal frame from the laser frame
     Mat red , blue, green, output;
