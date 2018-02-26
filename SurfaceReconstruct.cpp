@@ -24,6 +24,5 @@ pcl::PolygonMesh SurfaceReconstruct::reconstruct(pcl::PointCloud<pcl::PointXYZ>:
     poisson.setInputCloud(cloud_with_normals);
     pcl::PolygonMesh mesh;
     poisson.reconstruct(mesh);
-    //pcl::io::saveOBJFile("model.obj", this->mesh);
     return mesh;
 }

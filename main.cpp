@@ -6,6 +6,7 @@
 #include "ImageProcessing.h"
 #include "DataProcessing.h"
 #include "SurfaceReconstruct.h"
+#include "Hardware.h"
 
 //number of images taken as the object rotates and equal to the rotation steps of the motor
 #define NUM_OF_STEPS 50
@@ -16,17 +17,17 @@ using namespace std;
 
 int main(int argc, char** argv){
 
+	Hardware:motorStep();
 	cv::VideoCapture cam(0);
-
 	cv::Mat laserFrame, frame, image1;//temps
 	cv::Mat cropped[NUM_OF_STEPS];//stores all the photos after processing
 
 	for(int i = 0; i < NUM_OF_STEPS ;i++){
 
 		if(argc == 1){
-			//turn on laser
+			Hardware::laserOn();
 			cam.read(laserFrame);
-			//turn off laser
+			Hardware::laserOff();
 			cv::waitKey(FRAME_DELAY);
 			cam.read(frame);
 		}else{//for testing with saved images
@@ -42,7 +43,9 @@ int main(int argc, char** argv){
 
 		cv::namedWindow("cropped", cv::WINDOW_AUTOSIZE );
 		cv::imshow("cropped",cropped[i]);
-		//step
+		
+		Hardware::motorStep();
+
 		cv::waitKey(FRAME_DELAY);
 	}
 
@@ -60,5 +63,4 @@ int main(int argc, char** argv){
 
 	pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud);
 	pcl::io::saveOBJFile("model.obj", mesh);
-		
 }
