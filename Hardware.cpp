@@ -1,6 +1,6 @@
 #include "Hardware.h"
 
-int Hardware::motorStep(){
+void Hardware::motorStep(){
 
 	static unsigned char count = 0;
 

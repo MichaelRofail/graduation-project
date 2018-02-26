@@ -17,7 +17,7 @@ using namespace std;
 
 int main(int argc, char** argv){
 
-	Hardware:motorStep();
+	Hardware::motorInit();
 	cv::VideoCapture cam(0);
 	cv::Mat laserFrame, frame, image1;//temps
 	cv::Mat cropped[NUM_OF_STEPS];//stores all the photos after processing
@@ -26,6 +26,7 @@ int main(int argc, char** argv){
 
 		if(argc == 1){
 			Hardware::laserOn();
+			cv::waitKey(FRAME_DELAY);
 			cam.read(laserFrame);
 			Hardware::laserOff();
 			cv::waitKey(FRAME_DELAY);
