@@ -9,5 +9,5 @@ include_directories(${OpenCV_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
-add_executable(main Hardware.cpp SurfaceReconstruct.cpp ImageProcessing.cpp DataProcessing.cpp main.cpp)
-target_link_libraries(main ${OpenCV_LIBS} ${PCL_LIBRARIES} wiringPi)
+add_executable(main SurfaceReconstruct.cpp ImageProcessing.cpp DataProcessing.cpp main.cpp)
+target_link_libraries(main ${OpenCV_LIBS} ${PCL_LIBRARIES})
