@@ -11,11 +11,11 @@
 //number of images taken as the object rotates and equal to the rotation steps of the motor
 #define NUM_OF_STEPS 50
 //the delay between each frame capture in ms 
-#define FRAME_DELAY 34
+#define FRAME_DELAY 600
 
 using namespace std;
 
-int main(int argc, char** argv){
+int main(){
 
 	Hardware::motorInit();
 	cv::VideoCapture cam(0);
@@ -24,17 +24,12 @@ int main(int argc, char** argv){
 
 	for(int i = 0; i < NUM_OF_STEPS ;i++){
 
-		if(argc == 1){
-			Hardware::laserOn();
-			cv::waitKey(FRAME_DELAY);
-			cam.read(laserFrame);
-			Hardware::laserOff();
-			cv::waitKey(FRAME_DELAY);
-			cam.read(frame);
-		}else{//for testing with saved images
-			laserFrame = cv::imread("%dl.jpg", i);
-			frame = cv::imread("%d.jpg", i);
-		}
+		Hardware::laserOn();
+		cv::waitKey(FRAME_DELAY);
+		cam.read(laserFrame);
+		Hardware::laserOff();
+		cv::waitKey(FRAME_DELAY);
+		cam.read(frame);
 
 		image1 = ImageProcessing::extractLaser(laserFrame, frame);
 		cropped[i] = ImageProcessing::crop(image1);
@@ -46,8 +41,6 @@ int main(int argc, char** argv){
 		cv::imshow("cropped",cropped[i]);
 		
 		Hardware::motorStep();
-
-		cv::waitKey(FRAME_DELAY);
 	}
 
 	float* arr = new float[cropped[0].rows];//holds output points from each frame in 2d
