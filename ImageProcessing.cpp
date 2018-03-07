@@ -31,14 +31,14 @@ Mat ImageProcessing::extractLaser(const Mat& laserFrame, const Mat& frame){
 }
 
 void ImageProcessing::getThreshold(unsigned char& blue_thresh, unsigned char& green_thresh, unsigned char& red_thresh){
-    blue_thresh = 200;
-    green_thresh = 200;
-    red_thresh = 180;
+    blue_thresh = 130;
+    green_thresh = 130;
+    red_thresh = 80;
 }
 
 Mat ImageProcessing::crop(Mat& input){
 
-    Mat output = input(Rect(input.cols/2,0,input.cols/2,input.rows));
+    Mat output = input(Rect((input.cols/3) + 20, input.rows/2, (input.cols/3) + 7, (input.rows/2)- 30));
     return output;
 }
 

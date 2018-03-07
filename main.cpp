@@ -19,11 +19,22 @@ int main(int argc, char** argv){
 	cv::VideoCapture cam(0);
 	cv::Mat laserFrame, frame, image1;//temps
 	cv::Mat cropped[NUM_OF_STEPS];//stores all the photos after processing
+	ostringstream ss;
 
 	for(int i = 0; i < NUM_OF_STEPS ;i++){
-
-		laserFrame = cv::imread("%dl.jpg", i);
-		frame = cv::imread("%d.jpg", i);
+		ss <<"imgs/";
+		ss <<i;
+        ss <<"l.jpg";    
+        frame = cv::imread(ss.str());   
+		
+		ss.str("");
+        ss.clear();
+		ss <<"imgs/";
+        ss <<i;
+        ss <<".jpg";
+		laserFrame = cv::imread(ss.str());
+		ss.str("");
+        ss.clear();
 
 		image1 = ImageProcessing::extractLaser(laserFrame, frame);
 		cropped[i] = ImageProcessing::crop(image1);
