@@ -3,6 +3,7 @@
  * Run this program with any argument for test mode where the program reads
  *  images from the same folder instead of the camera 
 **/
+#include <raspicam/raspicam_cv.h>
 #include "ImageProcessing.h"
 #include "DataProcessing.h"
 #include "SurfaceReconstruct.h"
@@ -18,18 +19,23 @@ using namespace std;
 int main(){
 
 	Hardware::motorInit();
-	cv::VideoCapture cam(0);
 	cv::Mat laserFrame, frame, image1;//temps
 	cv::Mat cropped[NUM_OF_STEPS];//stores all the photos after processing
+	raspicam::RaspiCam_Cv Camera;
+	Camera.set(CV_CAP_PROP_FORMAT, CV_8UC3);
+	Camera.open();
 
 	for(int i = 0; i < NUM_OF_STEPS ;i++){
-
+		
+		Camera.grab();
 		Hardware::laserOn();
 		cv::waitKey(FRAME_DELAY);
-		cam.read(laserFrame);
+		Camera.retrieve(laserFrame);
+
+		Camera.grab();
 		Hardware::laserOff();
 		cv::waitKey(FRAME_DELAY);
-		cam.read(frame);
+		Camera.retrieve(frame);
 
 		image1 = ImageProcessing::extractLaser(laserFrame, frame);
 		cropped[i] = ImageProcessing::crop(image1);
@@ -42,6 +48,7 @@ int main(){
 		
 		Hardware::motorStep();
 	}
+	Camera.release();
 
 	float* arr = new float[cropped[0].rows];//holds output points from each frame in 2d
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>); //stores the cloud
