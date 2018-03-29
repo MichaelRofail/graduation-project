@@ -16,6 +16,12 @@ Mat ImageProcessing::extractLaser(const Mat& laserFrame, const Mat& frame){
     return output;
 }
 
+Mat ImageProcessing::crop(Mat& input){
+
+    Mat output = input(Rect((input.cols/3) + 20, input.rows/2, (input.cols/3) + 7, (input.rows/2)- 30));
+    return output;
+}
+
 void ImageProcessing::extractPoints(Mat& inputMat, float* arr){
     bool found;
     for( int i = 0; i < inputMat.rows; ++i){
