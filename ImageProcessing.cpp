@@ -4,41 +4,15 @@ using namespace cv;
 
 Mat ImageProcessing::extractLaser(const Mat& laserFrame, const Mat& frame){
     Mat subframe = laserFrame - frame;//subtract the normal frame from the laser frame
-    Mat red , blue, green, output;
+    Mat gray, output, equalised;
 
-    //extract each channel
-    extractChannel(subframe, red, 2); 
-    extractChannel(subframe, blue, 0);
-    extractChannel(subframe, green, 1);
+    cvtColor(subframe, gray, COLOR_BGR2GRAY);
 
-    unsigned char blue_thresh, green_thresh, red_thresh;
-    getThreshold(blue_thresh, green_thresh, red_thresh);
-
-    /**
-     *threshold each channel where the red has the lowest threshold.
-     *the subtraction can move the laser from the red channel to other channels depending
-     on the original color of the object.
-    **/
-    threshold(blue, blue, blue_thresh, 255, THRESH_BINARY);
-    threshold(green, green, green_thresh, 255, THRESH_BINARY);
-    threshold(red, red, red_thresh, 255, THRESH_BINARY);
-
-    //or all channels together after threshold
-    bitwise_or(blue, green, output);
-    bitwise_or(red, output, output);
-
-    return output;
-}
-
-void ImageProcessing::getThreshold(unsigned char& blue_thresh, unsigned char& green_thresh, unsigned char& red_thresh){
-    blue_thresh = 200;
-    green_thresh = 200;
-    red_thresh = 180;
-}
-
-Mat ImageProcessing::crop(Mat& input){
-
-    Mat output = input(Rect(input.cols/2,0,input.cols/2,input.rows));
+    static Ptr<CLAHE> clahe = createCLAHE();
+    clahe->setClipLimit(20);
+    clahe->apply(gray, equalised);
+     
+    threshold(equalised, output, LASER_THRESHOLD, 255, THRESH_BINARY);
     return output;
 }
 
