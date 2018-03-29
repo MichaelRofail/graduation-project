@@ -4,6 +4,8 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
+#define LASER_THRESHOLD 150
+
 class ImageProcessing{
 public:
     static cv::Mat extractLaser(const cv::Mat& laserFrame,const cv::Mat& frame);
