@@ -7,14 +7,16 @@
 #define MOTOR_PIN4    3 // IN4
 #define ENABLE        4 // ENABLE PIN
 
-#define LASER_PIN   5
+#define LASER1_PIN   5
+#define LASER2_PIN   5//to change
 #define MOTOR_DELAY 500
 
 
 class Hardware{
 public: 
-    static void motorStep();
-    static void motorInit();
-    static void laserOn();
-    static void laserOff();
+    static void motorStep(void);
+    static void motorMicroStep(void);
+    static void hardwareInit(void);
+    static void laserOn(int laser);
+    static void laserOff(int laser);
 };
