@@ -20,7 +20,7 @@ using namespace std;
 
 int main(){
 
-	Hardware::motorInit();
+	Hardware::hardwareInit();
 	cv::Mat laserFrame, frame, image1;//temps
 	cv::Mat cropped[NUM_OF_STEPS];//stores all the photos after processing
 	
@@ -33,12 +33,12 @@ int main(){
 	for(int i = 0; i < NUM_OF_STEPS ;i++){
 		
 		Camera.grab();
-		Hardware::laserOn();
+		Hardware::laserOn(1);
 		cv::waitKey(FRAME_DELAY);
 		Camera.retrieve(laserFrame);
 
 		Camera.grab();
-		Hardware::laserOff();
+		Hardware::laserOff(1);
 		cv::waitKey(FRAME_DELAY);
 		Camera.retrieve(frame);
 
