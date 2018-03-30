@@ -13,6 +13,8 @@
 #define NUM_OF_STEPS 50
 //the delay between each frame capture in ms 
 #define FRAME_DELAY 600
+//camera brightness
+#define BRIGHTNESS 20 
 
 using namespace std;
 
@@ -21,8 +23,11 @@ int main(){
 	Hardware::motorInit();
 	cv::Mat laserFrame, frame, image1;//temps
 	cv::Mat cropped[NUM_OF_STEPS];//stores all the photos after processing
+	
 	raspicam::RaspiCam_Cv Camera;
 	Camera.set(CV_CAP_PROP_FORMAT, CV_8UC3);
+	Camera.set(CV_CAP_PROP_BRIGHTNESS, BRIGHTNESS);
+    Camera.set(CV_CAP_PROP_WHITE_BALANCE_BLUE_U, 50);
 	Camera.open();
 
 	for(int i = 0; i < NUM_OF_STEPS ;i++){
