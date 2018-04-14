@@ -20,68 +20,68 @@ using namespace std;
 
 int main(){
 
-	Hardware::hardwareInit();
-	cv::Mat laserFrame, frame, image1;//temps
-	cv::Mat cropped[NUM_OF_STEPS];//stores all the photos after processing
-	
-	raspicam::RaspiCam_Cv Camera;
-	Camera.set(CV_CAP_PROP_FORMAT, CV_8UC3);
-	Camera.set(CV_CAP_PROP_BRIGHTNESS, BRIGHTNESS);
-	Camera.open();
+    Hardware::hardwareInit();
+    cv::Mat laserFrame, frame, image1;//temps
+    cv::Mat cropped[NUM_OF_STEPS];//stores all the photos after processing
+    
+    raspicam::RaspiCam_Cv Camera;
+    Camera.set(CV_CAP_PROP_FORMAT, CV_8UC3);
+    Camera.set(CV_CAP_PROP_BRIGHTNESS, BRIGHTNESS);
+    Camera.open();
     ostringstream ss;
 
-	for(int i = 0; i < NUM_OF_STEPS ;i++){
-		
-		Camera.grab();
-		Hardware::laserOn(1);
-		cv::waitKey(FRAME_DELAY);
-		Camera.retrieve(laserFrame);
+    for(int i = 0; i < NUM_OF_STEPS ;i++){
+        
+        Camera.grab();
+        Hardware::laserOn(1);
+        cv::waitKey(FRAME_DELAY);
+        Camera.retrieve(laserFrame);
 
         ss <<"imgs/";
-	    ss <<i;
+        ss <<i;
         ss <<"l.jpg";    
-        cv::imWrite(ss.str(), laserFrame);
+        cv::imwrite(ss.str(), laserFrame);
         ss.str("");
         ss.clear();
         
         ss <<"imgs/";
         ss <<i;
         ss <<".jpg";
-	
-		Camera.grab();
-		Hardware::laserOff(1);
-		cv::waitKey(FRAME_DELAY);
-		Camera.retrieve(frame);
+    
+        Camera.grab();
+        Hardware::laserOff(1);
+        cv::waitKey(FRAME_DELAY);
+        Camera.retrieve(frame);
 
-        cv::imWrite(ss.str(), frame);
+        cv::imwrite(ss.str(), frame);
         ss.str("");
         ss.clear();
 
-		image1 = ImageProcessing::extractLaser(laserFrame, frame);
-		cropped[i] = ImageProcessing::crop(image1);
+        image1 = ImageProcessing::extractLaser(laserFrame, frame);
+        cropped[i] = ImageProcessing::crop(image1);
 
-		cv::namedWindow("orig Image", cv::WINDOW_AUTOSIZE);
-		cv::imshow("orig Image",frame);
+        cv::namedWindow("orig Image", cv::WINDOW_AUTOSIZE);
+        cv::imshow("orig Image",frame);
 
-		cv::namedWindow("cropped", cv::WINDOW_AUTOSIZE);
-		cv::imshow("cropped",cropped[i]);
-		
-		Hardware::motorStep();
-	}
-	Camera.release();
+        cv::namedWindow("cropped", cv::WINDOW_AUTOSIZE);
+        cv::imshow("cropped",cropped[i]);
+        
+        Hardware::motorStep();
+    }
+    Camera.release();
 
-	float* arr = new float[cropped[0].rows];//holds output points from each frame in 2d
-	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>); //stores the cloud
-	cloud->width = 0;
-	cloud->height = 0;
-	cloud->is_dense = false;
+    float* arr = new float[cropped[0].rows];//holds output points from each frame in 2d
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>); //stores the cloud
+    cloud->width = 0;
+    cloud->height = 0;
+    cloud->is_dense = false;
 
-	for(int i = 0; i < NUM_OF_STEPS; i++){//post processing loop that extracts points from frames
-		ImageProcessing::extractPoints(cropped[i],arr);
-		DataProcessing::generateXYZ(cloud, arr, cropped[i].rows, i, NUM_OF_STEPS);
-	}	
-	pcl::io::savePCDFileASCII ("my_point_cloud.pcd", *cloud);//save the cloud to a file
+    for(int i = 0; i < NUM_OF_STEPS; i++){//post processing loop that extracts points from frames
+        ImageProcessing::extractPoints(cropped[i],arr);
+        DataProcessing::generateXYZ(cloud, arr, cropped[i].rows, i, NUM_OF_STEPS);
+    }	
+    pcl::io::savePCDFileASCII ("my_point_cloud.pcd", *cloud);//save the cloud to a file
 
-	pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud);
-	pcl::io::saveOBJFile("model.obj", mesh);
+    pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud);
+    pcl::io::saveOBJFile("model.obj", mesh);
 }
