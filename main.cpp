@@ -28,6 +28,7 @@ int main(){
 	Camera.set(CV_CAP_PROP_FORMAT, CV_8UC3);
 	Camera.set(CV_CAP_PROP_BRIGHTNESS, BRIGHTNESS);
 	Camera.open();
+    ostringstream ss;
 
 	for(int i = 0; i < NUM_OF_STEPS ;i++){
 		
@@ -36,10 +37,25 @@ int main(){
 		cv::waitKey(FRAME_DELAY);
 		Camera.retrieve(laserFrame);
 
+        ss <<"imgs/";
+	    ss <<i;
+        ss <<"l.jpg";    
+        cv::imWrite(ss.str(), laserFrame);
+        ss.str("");
+        ss.clear();
+        
+        ss <<"imgs/";
+        ss <<i;
+        ss <<".jpg";
+	
 		Camera.grab();
 		Hardware::laserOff(1);
 		cv::waitKey(FRAME_DELAY);
 		Camera.retrieve(frame);
+
+        cv::imWrite(ss.str(), frame);
+        ss.str("");
+        ss.clear();
 
 		image1 = ImageProcessing::extractLaser(laserFrame, frame);
 		cropped[i] = ImageProcessing::crop(image1);

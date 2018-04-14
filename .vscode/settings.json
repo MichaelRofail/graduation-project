@@ -3,6 +3,7 @@
         "*.tcc": "cpp",
         "hash_map": "cpp",
         "chrono": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "iosfwd": "cpp"
     }
 }
