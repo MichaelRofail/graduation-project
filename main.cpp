@@ -10,11 +10,11 @@
 #include "Hardware.h"
 
 //number of images taken as the object rotates and equal to the rotation steps of the motor
-#define NUM_OF_STEPS 50
+#define NUM_OF_STEPS 96
 //the delay between each frame capture in ms 
 #define FRAME_DELAY 600
 //camera brightness
-#define BRIGHTNESS 20 
+#define BRIGHTNESS 40 
 
 using namespace std;
 
@@ -27,7 +27,6 @@ int main(){
 	raspicam::RaspiCam_Cv Camera;
 	Camera.set(CV_CAP_PROP_FORMAT, CV_8UC3);
 	Camera.set(CV_CAP_PROP_BRIGHTNESS, BRIGHTNESS);
-    Camera.set(CV_CAP_PROP_WHITE_BALANCE_BLUE_U, 50);
 	Camera.open();
 
 	for(int i = 0; i < NUM_OF_STEPS ;i++){
@@ -45,10 +44,10 @@ int main(){
 		image1 = ImageProcessing::extractLaser(laserFrame, frame);
 		cropped[i] = ImageProcessing::crop(image1);
 
-		cv::namedWindow("orig Image", cv::WINDOW_AUTOSIZE );
+		cv::namedWindow("orig Image", cv::WINDOW_AUTOSIZE);
 		cv::imshow("orig Image",frame);
 
-		cv::namedWindow("cropped", cv::WINDOW_AUTOSIZE );
+		cv::namedWindow("cropped", cv::WINDOW_AUTOSIZE);
 		cv::imshow("cropped",cropped[i]);
 		
 		Hardware::motorStep();
