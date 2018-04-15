@@ -8,17 +8,20 @@ Mat ImageProcessing::extractLaser(const Mat& laserFrame, const Mat& frame){
 
     cvtColor(subframe, gray, COLOR_BGR2GRAY);
 
-    static Ptr<CLAHE> clahe = createCLAHE();
-    clahe->setClipLimit(20);
-    clahe->apply(gray, equalised);
+    equalizeHist(gray , equalised);
+    //static Ptr<CLAHE> clahe = createCLAHE();
+    //clahe->setClipLimit(20);
+    //clahe->apply(gray, equalised);
      
     threshold(equalised, output, LASER_THRESHOLD, 255, THRESH_BINARY);
+    medianBlur(output, output, 3);
     return output;
 }
 
 Mat ImageProcessing::crop(Mat& input){
 
-    Mat output = input(Rect((input.cols/3) + 20, input.rows/2, (input.cols/3) + 7, (input.rows/2)- 30));
+    //Mat output = input(Rect((input.cols/3) + 20, input.rows/2 - 50, (input.cols/3) + 7, (input.rows/2) + 30));
+    Mat output = input(Rect(600, 235, 268, 493));
     return output;
 }
 
