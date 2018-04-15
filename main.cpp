@@ -10,7 +10,7 @@
 //number of images taken as the object rotates and equal to the rotation steps of the motor
 #define NUM_OF_STEPS 96
 //the delay between each frame capture in ms 
-#define FRAME_DELAY 34
+#define FRAME_DELAY 100
 
 using namespace std;
 
@@ -25,24 +25,27 @@ int main(int argc, char** argv){
 		ss <<"imgs/";
 		ss <<i;
         ss <<"l.jpg";    
-        frame = cv::imread(ss.str());   
+        laserFrame = cv::imread(ss.str());   
 		
 		ss.str("");
         ss.clear();
 		ss <<"imgs/";
         ss <<i;
         ss <<".jpg";
-		laserFrame = cv::imread(ss.str());
+	    frame = cv::imread(ss.str());
 		ss.str("");
         ss.clear();
 
 		image1 = ImageProcessing::extractLaser(laserFrame, frame);
 		cropped[i] = ImageProcessing::crop(image1);
 
-		cv::namedWindow("orig Image", cv::WINDOW_AUTOSIZE );
+		cv::namedWindow("orig Image", cv::WINDOW_NORMAL);
 		cv::imshow("orig Image",frame);
 
-		cv::namedWindow("cropped", cv::WINDOW_AUTOSIZE );
+        cv::namedWindow("laser Image", cv::WINDOW_NORMAL);
+		cv::imshow("laser Image",laserFrame);
+
+		cv::namedWindow("cropped", cv::WINDOW_NORMAL);
 		cv::imshow("cropped",cropped[i]);
 		cv::waitKey(FRAME_DELAY);
 	}
