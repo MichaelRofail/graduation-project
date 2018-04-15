@@ -68,6 +68,7 @@ int main(){
         
         Hardware::motorStep();
     }
+    Hardware::laserOff(1);
     Camera.release();
 
     float* arr = new float[cropped[0].rows];//holds output points from each frame in 2d
