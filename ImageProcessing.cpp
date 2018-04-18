@@ -8,11 +8,10 @@ Mat ImageProcessing::extractLaser(const Mat& laserFrame, const Mat& frame){
 
     cvtColor(subframe, gray, COLOR_BGR2GRAY);
 
-    static Ptr<CLAHE> clahe = createCLAHE();
-    clahe->setClipLimit(20);
-    clahe->apply(gray, equalised);
+    equalizeHist(gray , equalised);
      
     threshold(equalised, output, LASER_THRESHOLD, 255, THRESH_BINARY);
+    medianBlur(output, output, 3);
     return output;
 }
 
