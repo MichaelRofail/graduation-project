@@ -35,7 +35,7 @@ int main(int argc, char** argv){
 	    frame = cv::imread(ss.str());
 		ss.str("");
         ss.clear();
-		
+
 		cv::namedWindow("orig Image", cv::WINDOW_NORMAL);
 		cv::imshow("orig Image",frame);
 
@@ -46,8 +46,6 @@ int main(int argc, char** argv){
 		frame = ImageProcessing::crop(frame);
 		image1 = ImageProcessing::extractLaser(laserFrame, frame);
 		cropped[i] = image1;
-
-
 
 		cv::namedWindow("cropped", cv::WINDOW_NORMAL);
 		cv::imshow("cropped",cropped[i]);
