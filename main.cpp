@@ -28,7 +28,11 @@ int main(){
     Camera.set(CV_CAP_PROP_FORMAT, CV_8UC3);
     Camera.set(CV_CAP_PROP_BRIGHTNESS, BRIGHTNESS);
     Camera.open();
-	cv::waitKey(300);//to give time for the camera to reach stablility
+	//to give time for the camera to reach stablility
+	Camera.grab();
+	cv::waitKey(FRAME_DELAY);
+    Camera.retrieve(laserFrame);
+	
     ostringstream ss;
 
     for(int i = 0; i < NUM_OF_STEPS ;i++){
