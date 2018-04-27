@@ -8,7 +8,7 @@
 #include "SurfaceReconstruct.h"
 
 //number of images taken as the object rotates and equal to the rotation steps of the motor
-#define NUM_OF_STEPS 96
+#define NUM_OF_STEPS 192
 //the delay between each frame capture in ms 
 #define FRAME_DELAY 100
 
@@ -35,9 +35,11 @@ int main(int argc, char** argv){
 	    frame = cv::imread(ss.str());
 		ss.str("");
         ss.clear();
-
+		
+		laserFrame = ImageProcessing::crop(laserFrame);
+		frame = ImageProcessing::crop(frame);
 		image1 = ImageProcessing::extractLaser(laserFrame, frame);
-		cropped[i] = ImageProcessing::crop(image1);
+		cropped[i] = image1;
 
 		cv::namedWindow("orig Image", cv::WINDOW_NORMAL);
 		cv::imshow("orig Image",frame);

@@ -8,7 +8,7 @@
 #include <pcl/io/obj_io.h>
 #include <pcl/surface/poisson.h>
 
-#define POISSON_DEPTH 5
+#define POISSON_DEPTH 6
 
 class SurfaceReconstruct{
     public:

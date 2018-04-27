@@ -3,6 +3,9 @@
         "*.tcc": "cpp",
         "hash_map": "cpp",
         "chrono": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "array": "cpp",
+        "slist": "cpp",
+        "initializer_list": "cpp"
     }
 }
