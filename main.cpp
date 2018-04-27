@@ -62,8 +62,10 @@ int main(){
         ss.str("");
         ss.clear();
 
-        image1 = ImageProcessing::extractLaser(laserFrame, frame);
-        cropped[i] = ImageProcessing::crop(image1);
+		laserFrame = ImageProcessing::crop(laserFrame);
+		frame = ImageProcessing::crop(frame);
+		image1 = ImageProcessing::extractLaser(laserFrame, frame);
+		cropped[i] = image1;
         
         Hardware::motorMicroStep();
     }
