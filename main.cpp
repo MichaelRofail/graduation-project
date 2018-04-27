@@ -12,7 +12,7 @@
 //number of images taken as the object rotates and equal to the rotation steps of the motor
 #define NUM_OF_STEPS 96
 //the delay between each frame capture in ms 
-#define FRAME_DELAY 600
+#define FRAME_DELAY 200
 //camera brightness
 #define BRIGHTNESS 40 
 
@@ -28,6 +28,7 @@ int main(){
     Camera.set(CV_CAP_PROP_FORMAT, CV_8UC3);
     Camera.set(CV_CAP_PROP_BRIGHTNESS, BRIGHTNESS);
     Camera.open();
+	cv::waitKey(300);//to give time for the camera to reach stablility
     ostringstream ss;
 
     for(int i = 0; i < NUM_OF_STEPS ;i++){
