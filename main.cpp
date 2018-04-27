@@ -59,12 +59,6 @@ int main(){
 
         image1 = ImageProcessing::extractLaser(laserFrame, frame);
         cropped[i] = ImageProcessing::crop(image1);
-
-        cv::namedWindow("orig Image", cv::WINDOW_AUTOSIZE);
-        cv::imshow("orig Image",frame);
-
-        cv::namedWindow("cropped", cv::WINDOW_AUTOSIZE);
-        cv::imshow("cropped",cropped[i]);
         
         Hardware::motorStep();
     }
