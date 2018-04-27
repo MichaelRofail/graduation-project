@@ -36,16 +36,18 @@ int main(int argc, char** argv){
 		ss.str("");
         ss.clear();
 		
-		laserFrame = ImageProcessing::crop(laserFrame);
-		frame = ImageProcessing::crop(frame);
-		image1 = ImageProcessing::extractLaser(laserFrame, frame);
-		cropped[i] = image1;
-
 		cv::namedWindow("orig Image", cv::WINDOW_NORMAL);
 		cv::imshow("orig Image",frame);
 
         cv::namedWindow("laser Image", cv::WINDOW_NORMAL);
 		cv::imshow("laser Image",laserFrame);
+
+		laserFrame = ImageProcessing::crop(laserFrame);
+		frame = ImageProcessing::crop(frame);
+		image1 = ImageProcessing::extractLaser(laserFrame, frame);
+		cropped[i] = image1;
+
+
 
 		cv::namedWindow("cropped", cv::WINDOW_NORMAL);
 		cv::imshow("cropped",cropped[i]);
