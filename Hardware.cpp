@@ -72,8 +72,8 @@ void Hardware::motorMicroStep(){
 		digitalWrite(ENABLE, LOW);
         digitalWrite(MOTOR_PIN1, HIGH);
         digitalWrite(MOTOR_PIN2, LOW);
-        digitalWrite(MOTOR_PIN3, LOW);
-        digitalWrite(MOTOR_PIN4, HIGH);
+        digitalWrite(MOTOR_PIN3, HIGH);
+        digitalWrite(MOTOR_PIN4, LOW);
         count++;
     }else if (count == 5){
   		digitalWrite(ENABLE, LOW);
