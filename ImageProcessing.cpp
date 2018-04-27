@@ -3,15 +3,18 @@
 using namespace cv;
 
 Mat ImageProcessing::extractLaser(const Mat& laserFrame, const Mat& frame){
-    Mat subframe = laserFrame - frame;//subtract the normal frame from the laser frame
-    Mat gray, output, equalised;
+    Mat gray, output, equalised, subframe;
+    absdiff(laserFrame, frame, subframe);//subtract the normal frame from the laser frame
 
     cvtColor(subframe, gray, COLOR_BGR2GRAY);
-
     equalizeHist(gray , equalised);
      
     threshold(equalised, output, LASER_THRESHOLD, 255, THRESH_BINARY);
-    medianBlur(output, output, 3);
+
+    //openening morphology to get rid of stray pixels
+    int morph_size = 2;
+    Mat element = getStructuringElement( 1, Size( 2*morph_size + 1, 2*morph_size+1 ), Point( morph_size, morph_size ) );
+    morphologyEx(output, output, MORPH_OPEN, element);
     return output;
 }
 
