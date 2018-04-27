@@ -4,7 +4,7 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
-#define LASER_THRESHOLD 252
+#define LASER_THRESHOLD 253
 
 class ImageProcessing{
 public:
