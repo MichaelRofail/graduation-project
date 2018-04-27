@@ -10,7 +10,7 @@
 #include "Hardware.h"
 
 //number of images taken as the object rotates and equal to the rotation steps of the motor
-#define NUM_OF_STEPS 96
+#define NUM_OF_STEPS 192
 //the delay between each frame capture in ms 
 #define FRAME_DELAY 200
 //camera brightness
@@ -32,7 +32,7 @@ int main(){
 	Camera.grab();
 	cv::waitKey(FRAME_DELAY);
     Camera.retrieve(laserFrame);
-	
+
     ostringstream ss;
 
     for(int i = 0; i < NUM_OF_STEPS ;i++){
@@ -65,7 +65,7 @@ int main(){
         image1 = ImageProcessing::extractLaser(laserFrame, frame);
         cropped[i] = ImageProcessing::crop(image1);
         
-        Hardware::motorStep();
+        Hardware::motorMicroStep();
     }
     Hardware::laserOff(1);
     Camera.release();
