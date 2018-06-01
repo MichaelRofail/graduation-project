@@ -12,15 +12,31 @@ Mat ImageProcessing::extractLaser(const Mat& laserFrame, const Mat& frame){
 
     threshold(gray, thresh, 0, 255, THRESH_BINARY+THRESH_OTSU);
 
+    //int morph_size = 1;
+    //Mat element = getStructuringElement( 1, Size( 2*morph_size + 1, 2*morph_size+1 ), Point( morph_size, morph_size ) );
+    //morphologyEx( thresh, output, 0, element);
     medianBlur(thresh, output, MEDIAN_SIZE);
     return output;
 }
 
-Mat ImageProcessing::crop(Mat& input){
+Mat ImageProcessing::crop(Mat& input, int top){
 
-    //Mat output = input(Rect((input.cols/3) + 20, input.rows/2 - 50, (input.cols/3) + 7, (input.rows/2) + 30));
-    Mat output = input(Rect(630, 430, 268, 490));
+    Mat output = input(Rect((input.cols/2) + MIDDLE_CROP_CONSTANT, top, (input.cols/2) - MIDDLE_CROP_CONSTANT, input.rows - top - BOTTOM_CROP));
+    //Mat output = input(Rect(676, 427, 127, 518));
     return output;
+}
+int ImageProcessing::getTopCrop(cv::Mat& img1, cv::Mat& img2){
+    int top;
+    cv::Mat img;
+    cv::absdiff(img1, img2, img);
+    cvtColor(img, img, COLOR_BGR2GRAY);
+    GaussianBlur(img, img, Size(5,5), 0, 0);
+    threshold(img, img, 0, 255, THRESH_BINARY+THRESH_OTSU);
+    for( int i = 0; i < img.rows; i++){
+        for( int j = 0; j < img.cols; j++){
+        }
+    }
+    return top;
 }
 
 void ImageProcessing::extractPoints(Mat& inputMat, float* arr){
@@ -43,8 +59,14 @@ void ImageProcessing::extractPoints(Mat& inputMat, float* arr){
             }
         }
         //the point found is the average between the first and last white points found
-        if(found == true)arr[i] = (start + end)/2;
+        if(found == true){
+            arr[i] = (start + end)/2;
+            arr[i] = arr[i]/sin(0.52);//to change
+        }
         //if no point is found on a line put -1 in the array
-        else arr[i] = -1;
+    
+                ret[y,x] = 0
+    return ret
+    else arr[i] = -1;
     }
 }
