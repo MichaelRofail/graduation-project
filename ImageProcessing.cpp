@@ -25,6 +25,7 @@ Mat ImageProcessing::crop(Mat& input, int top){
     //Mat output = input(Rect(676, 427, 127, 518));
     return output;
 }
+
 int ImageProcessing::getTopCrop(cv::Mat& img1, cv::Mat& img2){
     int top;
     cv::Mat img;
@@ -32,14 +33,16 @@ int ImageProcessing::getTopCrop(cv::Mat& img1, cv::Mat& img2){
     cvtColor(img, img, COLOR_BGR2GRAY);
     GaussianBlur(img, img, Size(5,5), 0, 0);
     threshold(img, img, 0, 255, THRESH_BINARY+THRESH_OTSU);
+    medianBlur(img, img, 5);
     for( int i = 0; i < img.rows; i++){
         for( int j = 0; j < img.cols; j++){
+            if(img.at<uchar>(i,j) == 255)return i;
         }
     }
     return top;
 }
 
-void ImageProcessing::extractPoints(Mat& inputMat, float* arr){
+void ImageProcessing::extractPoints(Mat& inputMat, float* arr, float laserAngle){
     bool found;
     int start , end;
     for( int i = 0; i < inputMat.rows; ++i){
@@ -61,12 +64,9 @@ void ImageProcessing::extractPoints(Mat& inputMat, float* arr){
         //the point found is the average between the first and last white points found
         if(found == true){
             arr[i] = (start + end)/2;
-            arr[i] = arr[i]/sin(0.52);//to change
+            arr[i] /= sin(laserAngle);
         }
         //if no point is found on a line put -1 in the array
-    
-                ret[y,x] = 0
-    return ret
-    else arr[i] = -1;
+        else arr[i] = -1;
     }
 }
