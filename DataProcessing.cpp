@@ -9,7 +9,7 @@ void DataProcessing::generateXYZ(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud
     cloud->height = 1;
     cloud->points.resize (cloud->width * cloud->height);//resize the cloud to make space for more points
 
-    float angle = (360 * currentStep) / numOfSteps;
+    double angle = double((360 * currentStep) / numOfSteps);
     angle = (angle / 180) * 3.14159; //convert degree to rad
     float cosAngle = cos(angle), sinAngle = sin(angle);
     
