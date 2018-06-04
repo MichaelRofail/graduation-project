@@ -10,16 +10,23 @@
 //number of images taken as the object rotates and equal to the rotation steps of the motor
 #define NUM_OF_STEPS 192
 //the delay between each frame capture in ms 
-#define FRAME_DELAY 50
+#define FRAME_DELAY 5
+#define LASER1_ANGLE (0.52)
+#define SMOOTHING_SEARCH_RADIUS 15
 
 using namespace std;
 
 int main(int argc, char** argv){
 
 	cv::VideoCapture cam(0);
-	cv::Mat laserFrame, frame, image1;//temps
+	cv::Mat laserFrame, frame, image1, cropImg1, cropImg2;
 	cv::Mat cropped[NUM_OF_STEPS];//stores all the photos after processing
 	ostringstream ss;
+
+	//calculate crop
+	cropImg1 = cv::imread("imgs/crop1.jpg");
+	cropImg2 = cv::imread("imgs/crop2.jpg");
+	int top = ImageProcessing::getTopCrop(cropImg1, cropImg2);
 
 	for(int i = 0; i < NUM_OF_STEPS ;i++){
 		ss <<"imgs/";
@@ -42,8 +49,8 @@ int main(int argc, char** argv){
         cv::namedWindow("laser Image", cv::WINDOW_NORMAL);
 		cv::imshow("laser Image",laserFrame);
 
-		laserFrame = ImageProcessing::crop(laserFrame);
-		frame = ImageProcessing::crop(frame);
+		laserFrame = ImageProcessing::crop(laserFrame, top);
+		frame = ImageProcessing::crop(frame, top);
 		image1 = ImageProcessing::extractLaser(laserFrame, frame);
 		cropped[i] = image1;
 
@@ -59,11 +66,16 @@ int main(int argc, char** argv){
 	cloud->is_dense = false;
 
 	for(int i = 0; i < NUM_OF_STEPS; i++){//post processing loop that extracts points from frames
-		ImageProcessing::extractPoints(cropped[i],arr);
+		ImageProcessing::extractPoints(cropped[i],arr, LASER1_ANGLE);
 		DataProcessing::generateXYZ(cloud, arr, cropped[i].rows, i, NUM_OF_STEPS);
-	}	
-	pcl::io::savePCDFileASCII ("my_point_cloud.pcd", *cloud);//save the cloud to a file
+	}
+	pcl::PointCloud<pcl::PointNormal> cloudNormals = SurfaceReconstruct::smooth(cloud, SMOOTHING_SEARCH_RADIUS);
 
+	//save and load to remoe normals	
+	pcl::io::savePCDFileASCII ("my_point_cloud.pcd", cloudNormals);
+	pcl::io::loadPCDFile<pcl::PointXYZ>("my_point_cloud.pcd", *cloud);
+	
 	pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud);
+	pcl::io::savePCDFileASCII ("my_point_cloud.pcd", *cloud);//save the cloud to a file
 	pcl::io::saveOBJFile("model.obj", mesh);
 }
