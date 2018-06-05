@@ -1,8 +1,5 @@
-/**This is the main file for the 3D scanner
- * 
- * Run this program with any argument for test mode where the program reads
- *  images from the same folder instead of the camera 
-**/
+//This is the main file for the 3D scanner
+
 #include "ImageProcessing.h"
 #include "DataProcessing.h"
 #include "SurfaceReconstruct.h"
@@ -16,7 +13,7 @@
 
 using namespace std;
 
-int main(int argc, char** argv){
+int main(void){
 
 	cv::VideoCapture cam(0);
 	cv::Mat laserFrame, frame, image1, cropImg1, cropImg2;
