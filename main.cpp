@@ -13,15 +13,25 @@
 #define NUM_OF_STEPS 192
 //the delay between each frame capture in ms 
 #define FRAME_DELAY 200
+//the delay untill the motor stops 
+#define MOTOR_DELAY 200
 //camera brightness
 #define BRIGHTNESS 40 
+//camera between laser and normal to view plane
+#define LASER1_ANGLE (0.52)
+//somoothing radius for resampling
+#define SMOOTHING_SEARCH_RADIUS 15
+//crop the bottom plate
+#define BOTTOM_CROP 20
+//if the camera is off center 
+#define MIDDLE_CROP_CONSTANT 40
 
 using namespace std;
 
 int main(){
 
     Hardware::hardwareInit();
-    cv::Mat laserFrame, frame, image1;//temps
+    cv::Mat laserFrame, frame, image1, cropImg1, cropImg2;//temps
     cv::Mat cropped[NUM_OF_STEPS];//stores all the photos after processing
     
     raspicam::RaspiCam_Cv Camera;
@@ -34,6 +44,17 @@ int main(){
     Camera.retrieve(laserFrame);
 
     ostringstream ss;
+
+	Camera.grab();
+	cv::waitKey(FRAME_DELAY);
+   	Camera.retrieve(cropImg1);
+	for(int i = 0; i < 20 ;i++){
+		Hardware::motorMicroStep();
+		cv::waitKey(MOTOR_DELAY);	
+	}
+	Camera.grab();
+	cv::waitKey(FRAME_DELAY);
+   	Camera.retrieve(cropImg2);
 
     for(int i = 0; i < NUM_OF_STEPS ;i++){
         
@@ -62,8 +83,8 @@ int main(){
         ss.str("");
         ss.clear();
 
-		laserFrame = ImageProcessing::crop(laserFrame);
-		frame = ImageProcessing::crop(frame);
+		laserFrame = ImageProcessing::crop(laserFrame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
+		frame = ImageProcessing::crop(frame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
 		image1 = ImageProcessing::extractLaser(laserFrame, frame);
 		cropped[i] = image1;
         
@@ -79,11 +100,16 @@ int main(){
     cloud->is_dense = false;
 
     for(int i = 0; i < NUM_OF_STEPS; i++){//post processing loop that extracts points from frames
-        ImageProcessing::extractPoints(cropped[i],arr);
+        ImageProcessing::extractPoints(cropped[i], arr, LASER1_ANGLE);
         DataProcessing::generateXYZ(cloud, arr, cropped[i].rows, i, NUM_OF_STEPS);
-    }	
-    pcl::io::savePCDFileASCII ("my_point_cloud.pcd", *cloud);//save the cloud to a file
-
-    pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud);
-    pcl::io::saveOBJFile("model.obj", mesh);
+    }
+	pcl::PointCloud<pcl::PointNormal> cloudNormals = SurfaceReconstruct::smooth(cloud, SMOOTHING_SEARCH_RADIUS);
+	
+	//save and load to remove normals	
+	pcl::io::savePCDFileASCII ("my_point_cloud.pcd", cloudNormals);
+	pcl::io::loadPCDFile<pcl::PointXYZ>("my_point_cloud.pcd", *cloud);
+	
+	pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud, 480);//edit num
+	pcl::io::savePCDFileASCII ("my_point_cloud.pcd", *cloud);//save the cloud to a file
+	pcl::io::saveOBJFile("model.obj", mesh);
 }
