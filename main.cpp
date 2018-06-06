@@ -53,6 +53,8 @@ int main(){
 	cv::waitKey(FRAME_DELAY);
    	Camera.retrieve(cropImg2);
 	int top = ImageProcessing::getTopCrop(cropImg1, cropImg2);
+	cv::imwrite("imgs/crop1.jpg", cropImg1);
+	cv::imwrite("imgs/crop2.jpg", cropImg2);
 
     for(int i = 0; i < NUM_OF_STEPS ;i++){
         
