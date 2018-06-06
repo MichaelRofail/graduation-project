@@ -7,12 +7,14 @@
 #include <pcl/features/normal_3d.h>
 #include <pcl/io/obj_io.h>
 #include <pcl/surface/poisson.h>
+#include <pcl/surface/mls.h>
 
-#define POISSON_DEPTH 6
+#define POISSON_DEPTH 7
 
 class SurfaceReconstruct{
     public:
-    static pcl::PolygonMesh reconstruct(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+    static pcl::PolygonMesh reconstruct(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float centroidY);
+    static pcl::PointCloud<pcl::PointNormal> smooth(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int searchRadius);
 };
 
 #endif
