@@ -27,7 +27,7 @@
 using namespace std;
 
 int main(){
-	
+    
     Hardware::hardwareInit();
     cv::Mat laserFrame, frame, image1, cropImg1, cropImg2;//temps
     cv::Mat cropped[NUM_OF_STEPS];//stores all the photos after processing
@@ -36,25 +36,26 @@ int main(){
     Camera.set(CV_CAP_PROP_FORMAT, CV_8UC3);
     Camera.set(CV_CAP_PROP_BRIGHTNESS, BRIGHTNESS);
     Camera.open();
-	//to give time for the camera to reach stablility
-	Camera.grab();
-	cv::waitKey(FRAME_DELAY);
+    //to give time for the camera to reach stablility
+    Camera.grab();
+    cv::waitKey(FRAME_DELAY);
     Camera.retrieve(laserFrame);
+    cv::imwrite("imgs/crop1.jpg", laserFrame);
 
     ostringstream ss;
 
-	Camera.grab();
-	cv::waitKey(FRAME_DELAY);
-   	Camera.retrieve(cropImg1);
-	for(int i = 0; i < 20 ;i++){
-		Hardware::motorMicroStep();
-	}
-	Camera.grab();
-	cv::waitKey(FRAME_DELAY);
-   	Camera.retrieve(cropImg2);
-	int top = ImageProcessing::getTopCrop(cropImg1, cropImg2);
-	cv::imwrite("imgs/crop1.jpg", cropImg1);
-	cv::imwrite("imgs/crop2.jpg", cropImg2);
+    Camera.grab();
+    cv::waitKey(FRAME_DELAY);
+       Camera.retrieve(cropImg1);
+    for(int i = 0; i < 20 ;i++){
+        Hardware::motorMicroStep();
+    }
+    Camera.grab();
+    cv::waitKey(FRAME_DELAY);
+       Camera.retrieve(cropImg2);
+    int top = ImageProcessing::getTopCrop(cropImg1, cropImg2);
+    cv::imwrite("imgs/crop1.jpg", cropImg1);
+    cv::imwrite("imgs/crop2.jpg", cropImg2);
 
     for(int i = 0; i < NUM_OF_STEPS ;i++){
         
@@ -83,10 +84,10 @@ int main(){
         ss.str("");
         ss.clear();
 
-		laserFrame = ImageProcessing::crop(laserFrame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
-		frame = ImageProcessing::crop(frame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
-		image1 = ImageProcessing::extractLaser(laserFrame, frame);
-		cropped[i] = image1;
+        laserFrame = ImageProcessing::crop(laserFrame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
+        frame = ImageProcessing::crop(frame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
+        image1 = ImageProcessing::extractLaser(laserFrame, frame);
+        cropped[i] = image1;
         
         Hardware::motorMicroStep();
     }
@@ -103,13 +104,13 @@ int main(){
         ImageProcessing::extractPoints(cropped[i], arr, LASER1_ANGLE);
         DataProcessing::generateXYZ(cloud, arr, cropped[i].rows, i, NUM_OF_STEPS);
     }
-	pcl::PointCloud<pcl::PointNormal> cloudNormals = SurfaceReconstruct::smooth(cloud, SMOOTHING_SEARCH_RADIUS);
-	
-	//save and load to remove normals	
-	pcl::io::savePCDFileASCII ("my_point_cloud.pcd", cloudNormals);
-	pcl::io::loadPCDFile<pcl::PointXYZ>("my_point_cloud.pcd", *cloud);
-	
-	pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud, 480);//edit num
-	pcl::io::savePCDFileASCII ("my_point_cloud.pcd", *cloud);//save the cloud to a file
-	pcl::io::saveOBJFile("model.obj", mesh);
+    pcl::PointCloud<pcl::PointNormal> cloudNormals = SurfaceReconstruct::smooth(cloud, SMOOTHING_SEARCH_RADIUS);
+    
+    //save and load to remove normals	
+    pcl::io::savePCDFileASCII ("my_point_cloud.pcd", cloudNormals);
+    pcl::io::loadPCDFile<pcl::PointXYZ>("my_point_cloud.pcd", *cloud);
+    
+    pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud, 480);//edit num
+    pcl::io::savePCDFileASCII ("my_point_cloud.pcd", *cloud);//save the cloud to a file
+    pcl::io::saveOBJFile("model.obj", mesh);
 }
