@@ -27,22 +27,21 @@
 using namespace std;
 
 int main(){
-    
-    Hardware::hardwareInit();
-    cv::Mat laserFrame, frame, image1, cropImg1, cropImg2;//temps
-    cv::Mat cropped[NUM_OF_STEPS];//stores all the photos after processing
-    
+
     raspicam::RaspiCam_Cv Camera;
     Camera.set(CV_CAP_PROP_FORMAT, CV_8UC3);
     Camera.set(CV_CAP_PROP_BRIGHTNESS, BRIGHTNESS);
     Camera.open();
+    Hardware::hardwareInit();
+    ostringstream ss;
+    cv::Mat laserFrame, frame, image1, cropImg1, cropImg2;//temps
+    cv::Mat cropped[NUM_OF_STEPS];//stores all the photos after processing
+    
     //to give time for the camera to reach stablility
     Camera.grab();
     cv::waitKey(FRAME_DELAY);
     Camera.retrieve(laserFrame);
     cv::imwrite("imgs/crop1.jpg", laserFrame);
-
-    ostringstream ss;
 
     Camera.grab();
     cv::waitKey(FRAME_DELAY);
