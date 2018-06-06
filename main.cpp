@@ -10,6 +10,8 @@
 #define FRAME_DELAY 5
 #define LASER1_ANGLE (0.52)
 #define SMOOTHING_SEARCH_RADIUS 15
+#define BOTTOM_CROP 20
+#define MIDDLE_CROP_CONSTANT 40
 
 using namespace std;
 
@@ -46,8 +48,8 @@ int main(void){
         cv::namedWindow("laser Image", cv::WINDOW_NORMAL);
 		cv::imshow("laser Image",laserFrame);
 
-		laserFrame = ImageProcessing::crop(laserFrame, top);
-		frame = ImageProcessing::crop(frame, top);
+		laserFrame = ImageProcessing::crop(laserFrame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
+		frame = ImageProcessing::crop(frame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
 		image1 = ImageProcessing::extractLaser(laserFrame, frame);
 		cropped[i] = image1;
 
@@ -72,7 +74,7 @@ int main(void){
 	pcl::io::savePCDFileASCII ("my_point_cloud.pcd", cloudNormals);
 	pcl::io::loadPCDFile<pcl::PointXYZ>("my_point_cloud.pcd", *cloud);
 	
-	pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud);
+	pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud, 480);//edit num
 	pcl::io::savePCDFileASCII ("my_point_cloud.pcd", *cloud);//save the cloud to a file
 	pcl::io::saveOBJFile("model.obj", mesh);
 }
