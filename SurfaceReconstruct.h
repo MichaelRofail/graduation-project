@@ -13,8 +13,8 @@
 
 class SurfaceReconstruct{
     public:
-    static pcl::PolygonMesh reconstruct(pcl::PointCloud<pcl::PointXYZ>::Ptr);
-    static pcl::PointCloud<pcl::PointNormal> smooth(pcl::PointCloud<pcl::PointXYZ>::Ptr, int);
+    static pcl::PolygonMesh reconstruct(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float centroidY);
+    static pcl::PointCloud<pcl::PointNormal> smooth(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int searchRadius);
 };
 
 #endif
