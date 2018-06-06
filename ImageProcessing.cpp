@@ -8,7 +8,7 @@ Mat ImageProcessing::extractLaser(const Mat& laserFrame, const Mat& frame){
 
     cvtColor(subframe, gray, COLOR_BGR2GRAY);
     
-    GaussianBlur(gray, gray, Size(5,5), 0, 0);
+    GaussianBlur(gray, gray, Size(7,7), 0, 0);
 
     threshold(gray, thresh, 0, 255, THRESH_BINARY+THRESH_OTSU);
 
@@ -19,9 +19,9 @@ Mat ImageProcessing::extractLaser(const Mat& laserFrame, const Mat& frame){
     return output;
 }
 
-Mat ImageProcessing::crop(Mat& input, int top){
+Mat ImageProcessing::crop(Mat& input, int top, int middleCropConstant, int BottomCrop){
 
-    Mat output = input(Rect((input.cols/2) + MIDDLE_CROP_CONSTANT, top, (input.cols/2) - MIDDLE_CROP_CONSTANT, input.rows - top - BOTTOM_CROP));
+    Mat output = input(Rect((input.cols/2) + middleCropConstant, top, (input.cols/2) - middleCropConstant, input.rows - top - BottomCrop));
     //Mat output = input(Rect(676, 427, 127, 518));
     return output;
 }
