@@ -13,8 +13,6 @@
 #define NUM_OF_STEPS 192
 //the delay between each frame capture in ms 
 #define FRAME_DELAY 200
-//the delay untill the motor stops 
-#define MOTOR_DELAY 200
 //camera brightness
 #define BRIGHTNESS 40 
 //camera between laser and normal to view plane
@@ -29,7 +27,7 @@
 using namespace std;
 
 int main(){
-
+	
     Hardware::hardwareInit();
     cv::Mat laserFrame, frame, image1, cropImg1, cropImg2;//temps
     cv::Mat cropped[NUM_OF_STEPS];//stores all the photos after processing
@@ -50,11 +48,11 @@ int main(){
    	Camera.retrieve(cropImg1);
 	for(int i = 0; i < 20 ;i++){
 		Hardware::motorMicroStep();
-		cv::waitKey(MOTOR_DELAY);	
 	}
 	Camera.grab();
 	cv::waitKey(FRAME_DELAY);
    	Camera.retrieve(cropImg2);
+	int top = ImageProcessing::getTopCrop(cropImg1, cropImg2);
 
     for(int i = 0; i < NUM_OF_STEPS ;i++){
         
