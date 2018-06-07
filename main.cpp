@@ -15,14 +15,17 @@
 #define FRAME_DELAY 200
 //camera brightness
 #define BRIGHTNESS 40 
-//camera between laser and normal to view plane
+//angle between laser and normal to view plane in rad
 #define LASER1_ANGLE (0.52)
+#define LASER2_ANGLE (0.52)
 //somoothing radius for resampling
 #define SMOOTHING_SEARCH_RADIUS 15
 //crop the bottom plate
 #define BOTTOM_CROP 20
 //if the camera is off center 
 #define MIDDLE_CROP_CONSTANT 40
+//laser offeset in degree
+#define LASER2_OFFSET 80//temp
 
 using namespace std;
 
@@ -34,9 +37,10 @@ int main(){
     Camera.open();
     Hardware::hardwareInit();
     ostringstream ss;
-    cv::Mat laserFrame, frame, image1, cropImg1, cropImg2;//temps
-    cv::Mat cropped[NUM_OF_STEPS];//stores all the photos after processing
-    
+    cv::Mat laserFrame, frame, flipLaserFrame, flipFrame, pimg, cropImg1, cropImg2;
+    cv::Mat croppedL1[NUM_OF_STEPS];//stores all the photos after processing
+    cv::Mat croppedL2[NUM_OF_STEPS];
+
     //to give time for the camera to reach stablility
     Camera.grab();
     cv::waitKey(FRAME_DELAY);
@@ -45,52 +49,74 @@ int main(){
 
     Camera.grab();
     cv::waitKey(FRAME_DELAY);
-       Camera.retrieve(cropImg1);
+    Camera.retrieve(cropImg1);
     for(int i = 0; i < 20 ;i++){
         Hardware::motorMicroStep();
     }
     Camera.grab();
     cv::waitKey(FRAME_DELAY);
-       Camera.retrieve(cropImg2);
+    Camera.retrieve(cropImg2);
     int top = ImageProcessing::getTopCrop(cropImg1, cropImg2);
     cv::imwrite("imgs/crop1.jpg", cropImg1);
     cv::imwrite("imgs/crop2.jpg", cropImg2);
 
     for(int i = 0; i < NUM_OF_STEPS ;i++){
-        
+        //capture no laser image
         Camera.grab();
-        Hardware::laserOn(1);
         cv::waitKey(FRAME_DELAY);
-        Camera.retrieve(laserFrame);
+        Camera.retrieve(frame);
 
         ss <<"imgs/";
         ss <<i;
-        ss <<"l.jpg";    
+        ss <<".jpg";
+        cv::imwrite(ss.str(), frame);
+        ss.str("");
+        ss.clear();
+        
+        //capture laser 1 image
+        Hardware::laserOn(1);
+        Camera.grab();
+        cv::waitKey(FRAME_DELAY);
+        Camera.retrieve(laserFrame);
+        Hardware::laserOff(1);
+
+        ss <<"imgs/";
+        ss <<i;
+        ss <<"l1.jpg";    
+        cv::imwrite(ss.str(), laserFrame);
+        ss.str("");
+        ss.clear();
+
+        //process laser 1 images
+        laserFrame = ImageProcessing::crop(laserFrame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
+        frame = ImageProcessing::crop(frame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
+        pimg = ImageProcessing::extractLaser(laserFrame, frame);
+        croppedL1[i] = pimg;
+
+        //capture laser2 image
+        Hardware::laserOn(2);
+        Camera.grab();
+        cv::waitKey(FRAME_DELAY);
+        Camera.retrieve(laserFrame);
+        Hardware::laserOff(2);
+
+        ss <<"imgs/";
+        ss <<i;
+        ss <<"l2.jpg";    
         cv::imwrite(ss.str(), laserFrame);
         ss.str("");
         ss.clear();
         
-        ss <<"imgs/";
-        ss <<i;
-        ss <<".jpg";
-    
-        Camera.grab();
-        Hardware::laserOff(1);
-        cv::waitKey(FRAME_DELAY);
-        Camera.retrieve(frame);
+        //process laser2 images
+        cv::flip(laserFrame, flipLaserFrame, 0);
+        cv::flip(frame,flipFrame, 0);
+        flipLaserFrame = ImageProcessing::crop(flipLaserFrame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
+        flipFrame = ImageProcessing::crop(flipFrame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
+        pimg = ImageProcessing::extractLaser(laserFrame, frame);
+        croppedL2[i] = pimg;
 
-        cv::imwrite(ss.str(), frame);
-        ss.str("");
-        ss.clear();
-
-        laserFrame = ImageProcessing::crop(laserFrame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
-        frame = ImageProcessing::crop(frame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
-        image1 = ImageProcessing::extractLaser(laserFrame, frame);
-        cropped[i] = image1;
-        
         Hardware::motorMicroStep();
     }
-    Hardware::laserOff(1);
     Camera.release();
 
     float* arr = new float[cropped[0].rows];//holds output points from each frame in 2d
@@ -100,8 +126,10 @@ int main(){
     cloud->is_dense = false;
 
     for(int i = 0; i < NUM_OF_STEPS; i++){//post processing loop that extracts points from frames
-        ImageProcessing::extractPoints(cropped[i], arr, LASER1_ANGLE);
-        DataProcessing::generateXYZ(cloud, arr, cropped[i].rows, i, NUM_OF_STEPS);
+        ImageProcessing::extractPoints(croppedL1[i],arr, LASER1_ANGLE);
+        DataProcessing::generateXYZ(cloud, arr, croppedL1[i].rows, i, NUM_OF_STEPS, 0);
+        ImageProcessing::extractPoints(croppedL2[i],arr, LASER2_ANGLE);
+        DataProcessing::generateXYZ(cloud, arr, croppedL2[i].rows, i, NUM_OF_STEPS, LASER2_OFFSET);
     }
     pcl::PointCloud<pcl::PointNormal> cloudNormals = SurfaceReconstruct::smooth(cloud, SMOOTHING_SEARCH_RADIUS);
     
