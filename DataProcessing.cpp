@@ -1,6 +1,6 @@
 #include "DataProcessing.h"
 
-void DataProcessing::generateXYZ(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float* arr, int arrSize, int currentStep, int numOfSteps){
+void DataProcessing::generateXYZ(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float* arr, int arrSize, int currentStep, int numOfSteps, int offset){
     int numOfPoints = 0;//holds the actual number of points to be added to the cloud
     for(int i = 0; i < arrSize; i++){
         if(arr[i] > 0)numOfPoints++;
@@ -9,7 +9,7 @@ void DataProcessing::generateXYZ(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud
     cloud->height = 1;
     cloud->points.resize (cloud->width * cloud->height);//resize the cloud to make space for more points
 
-    double angle = double((360 * currentStep) / numOfSteps);
+    double angle = double((360 * currentStep) / numOfSteps) + (double)offset;
     angle = (angle / 180) * 3.14159; //convert degree to rad
     float cosAngle = cos(angle), sinAngle = sin(angle);
     

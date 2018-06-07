@@ -11,7 +11,7 @@ using namespace std;
 class DataProcessing{
     public:
     //transforms xy points in an array to xyz and fill point cloud
-    static void generateXYZ(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud , float* arr, int arrSize, int currentStep, int numOfSteps);
+    static void generateXYZ(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud , float* arr, int arrSize, int currentStep, int numOfSteps, int offset);
 };
 
 #endif
