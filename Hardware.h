@@ -8,7 +8,7 @@
 #define ENABLE        4 // ENABLE PIN
 
 #define LASER1_PIN   5
-#define LASER2_PIN   5//to change
+#define LASER2_PIN   6
 #define MOTOR_DELAY 500
 
 
