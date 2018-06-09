@@ -12,5 +12,9 @@ include_directories(${OpenCV_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
-add_executable(main Hardware.cpp SurfaceReconstruct.cpp ImageProcessing.cpp DataProcessing.cpp main.cpp)
+add_executable(main Hardware.cpp SurfaceReconstruct.cpp ImageProcessing.cpp DataProcessing.cpp main.cpp BLUETOOTH.c)
 target_link_libraries(main ${OpenCV_LIBS} ${PCL_LIBRARIES} wiringPi ${raspicam_CV_LIBS})
+
+set(EXTRA_LIBS ${YARP_LIBRARIES})
+list(APPEND EXTRA_LIBS "bluetooth")
+target_link_libraries(main ${EXTRA_LIBS})

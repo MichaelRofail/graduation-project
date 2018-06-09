@@ -8,6 +8,7 @@
 #include "DataProcessing.h"
 #include "SurfaceReconstruct.h"
 #include "Hardware.h"
+#include "BLUETOOTH.h"
 
 //number of images taken as the object rotates and equal to the rotation steps of the motor
 #define NUM_OF_STEPS 192
@@ -26,8 +27,20 @@
 
 using namespace std;
 
-int main(){
+int main(int argc, char **argv){
 
+	int client;
+	int s,i;
+	client = Xconnect(&s);
+	char buf[1024] = { 0 };
+	int bytes_read;
+	While(buf != "TF"){
+    
+    bytes_read = read(client, buf, sizeof(buf));
+    if( bytes_read > 0 ) {
+        printf("received [%s]\n", buf);
+    }
+	
     raspicam::RaspiCam_Cv Camera;
     Camera.set(CV_CAP_PROP_FORMAT, CV_8UC3);
     Camera.set(CV_CAP_PROP_BRIGHTNESS, BRIGHTNESS);
@@ -112,4 +125,5 @@ int main(){
     pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud, 480);//edit num
     pcl::io::savePCDFileASCII ("my_point_cloud.pcd", *cloud);//save the cloud to a file
     pcl::io::saveOBJFile("model.obj", mesh);
+}
 }
