@@ -119,7 +119,7 @@ int main(){
     }
     Camera.release();
 
-    float* arr = new float[cropped[0].rows];//holds output points from each frame in 2d
+    float* arr = new float[croppedL1[0].rows];//holds output points from each frame in 2d
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>); //stores the cloud
     cloud->width = 0;
     cloud->height = 0;
