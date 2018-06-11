@@ -63,9 +63,10 @@ int main(){
 
     Hardware::laserOff(1);
     Hardware::laserOff(2);
-    cv::waitKey(LASER_DELAY);
+    
 
     for(int i = 0; i < NUM_OF_STEPS ;i++){
+        cv::waitKey(LASER_DELAY);
         //capture no laser image
         Camera.grab();
         cv::waitKey(FRAME_DELAY);
@@ -81,9 +82,9 @@ int main(){
         
         //capture laser 1 image
         Hardware::laserOn(1);
+        cv::waitKey(LASER_DELAY);
         Camera.grab();
         cv::waitKey(FRAME_DELAY);
-        cv::waitKey(LASER_DELAY);
         Camera.retrieve(laserFrame);
         Hardware::laserOff(1);
 
@@ -102,9 +103,9 @@ int main(){
 
         //capture laser2 image
         Hardware::laserOn(2);
+        cv::waitKey(LASER_DELAY);
         Camera.grab();
         cv::waitKey(FRAME_DELAY);
-        cv::waitKey(LASER_DELAY);
         Camera.retrieve(laserFrame);
         Hardware::laserOff(2);
 
