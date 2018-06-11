@@ -12,18 +12,19 @@
 //number of images taken as the object rotates and equal to the rotation steps of the motor
 #define NUM_OF_STEPS 192
 //the delay between each frame capture in ms 
-#define FRAME_DELAY 200
+#define FRAME_DELAY 20
+#define LASER_DELAY 300
 //camera brightness
 #define BRIGHTNESS 40 
 //angle between laser and normal to view plane in rad
-#define LASER1_ANGLE (0.52)
-#define LASER2_ANGLE (0.52)
+#define LASER1_ANGLE (0.3272)
+#define LASER2_ANGLE (0.3436)
 //somoothing radius for resampling
 #define SMOOTHING_SEARCH_RADIUS 15
 //crop the bottom plate
-#define BOTTOM_CROP 20
+#define BOTTOM_CROP 10
 //if the camera is off center 
-#define MIDDLE_CROP_CONSTANT 40
+#define MIDDLE_CROP_CONSTANT 82
 //laser offeset in degree
 #define LASER2_OFFSET 80//temp
 
@@ -60,10 +61,15 @@ int main(){
     cv::imwrite("imgs/crop1.jpg", cropImg1);
     cv::imwrite("imgs/crop2.jpg", cropImg2);
 
+    Hardware::laserOff(1);
+    Hardware::laserOff(2);
+    cv::waitKey(LASER_DELAY);
+
     for(int i = 0; i < NUM_OF_STEPS ;i++){
         //capture no laser image
         Camera.grab();
         cv::waitKey(FRAME_DELAY);
+        cv::waitKey(LASER_DELAY);
         Camera.retrieve(frame);
 
         ss <<"imgs/";
@@ -77,6 +83,7 @@ int main(){
         Hardware::laserOn(1);
         Camera.grab();
         cv::waitKey(FRAME_DELAY);
+        cv::waitKey(LASER_DELAY);
         Camera.retrieve(laserFrame);
         Hardware::laserOff(1);
 
@@ -97,6 +104,7 @@ int main(){
         Hardware::laserOn(2);
         Camera.grab();
         cv::waitKey(FRAME_DELAY);
+        cv::waitKey(LASER_DELAY);
         Camera.retrieve(laserFrame);
         Hardware::laserOff(2);
 
