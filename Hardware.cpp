@@ -125,7 +125,7 @@ void Hardware::laserOn(int laser){
 void Hardware::laserOff(int laser){
 
     if(laser == 1){
-        digitalWrite(LASER1_PIN, LOW;
+        digitalWrite(LASER1_PIN, LOW);
     }else{
         digitalWrite(LASER2_PIN, LOW);
     }	     
