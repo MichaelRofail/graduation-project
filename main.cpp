@@ -11,16 +11,16 @@
 #define LASER1_ANGLE (0.52)
 #define LASER2_ANGLE (0.52)//temp
 #define SMOOTHING_SEARCH_RADIUS 15
-#define BOTTOM_CROP 20
-#define MIDDLE_CROP_CONSTANT 40
-#define LASER2_OFFSET 80//temp
+#define BOTTOM_CROP 60
+#define MIDDLE_CROP_CONSTANT 110
+#define LASER2_OFFSET 130//temp
 
 using namespace std;
 
 int main(void){
 
     cv::VideoCapture cam(0);
-    cv::Mat laserFrame, frame, flipLaserFrame, flipFrame, pimg, cropImg1, cropImg2;
+    cv::Mat laserFrame, frame, flipLaserFrame, flipFrame, laserFrameC, frameC, flipLaserFrameC, flipFrameC, pimg, cropImg1, cropImg2;
     cv::Mat croppedL1[NUM_OF_STEPS];//stores all the photos after processing
     cv::Mat croppedL2[NUM_OF_STEPS];
     ostringstream ss;
@@ -45,15 +45,9 @@ int main(void){
         ss.str("");
         ss.clear();
 
-        cv::namedWindow("orig Image", cv::WINDOW_NORMAL);
-        cv::imshow("orig Image",frame);
-
-        cv::namedWindow("laser Image", cv::WINDOW_NORMAL);
-        cv::imshow("laser Image",laserFrame);
-
-        laserFrame = ImageProcessing::crop(laserFrame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
-        frame = ImageProcessing::crop(frame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
-        pimg = ImageProcessing::extractLaser(laserFrame, frame);
+        laserFrameC = ImageProcessing::crop(laserFrame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
+        frameC = ImageProcessing::crop(frame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
+        pimg = ImageProcessing::extractLaser(laserFrameC, frameC);
         croppedL1[i] = pimg;
 
         ss <<"imgs/";
@@ -62,17 +56,21 @@ int main(void){
         laserFrame = cv::imread(ss.str());
         ss.str("");
         ss.clear();
+        
+        cv::flip(laserFrame, flipLaserFrame, 1);
+        cv::flip(frame,flipFrame, 1);
 
-        cv::flip(laserFrame, flipLaserFrame, 0);
-        cv::flip(frame,flipFrame, 0);
-        flipLaserFrame = ImageProcessing::crop(flipLaserFrame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
-        flipFrame = ImageProcessing::crop(flipFrame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
-        pimg = ImageProcessing::extractLaser(laserFrame, frame);
+        flipLaserFrameC = ImageProcessing::crop(flipLaserFrame, top, -MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
+        flipFrameC = ImageProcessing::crop(flipFrame, top, -MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
+        pimg = ImageProcessing::extractLaser(flipLaserFrameC, flipFrameC);
         croppedL2[i] = pimg;
-
-        cv::namedWindow("cropped", cv::WINDOW_AUTOSIZE);
-        cv::imshow("cropped",croppedL1[i]);
+        
+        cv::namedWindow("cropped2", cv::WINDOW_AUTOSIZE);
+        cv::imshow("cropped2",croppedL2[i]);
+        cv::namedWindow("cropped1", cv::WINDOW_AUTOSIZE);
+        cv::imshow("cropped1",croppedL1[i]);
         cv::waitKey(FRAME_DELAY);
+        
     }
 
     float* arr = new float[croppedL1[0].rows];//holds output points from each frame in 2d
@@ -80,7 +78,6 @@ int main(void){
     cloud->width = 0;
     cloud->height = 0;
     cloud->is_dense = false;
-
     for(int i = 0; i < NUM_OF_STEPS; i++){//post processing loop that extracts points from frames
         ImageProcessing::extractPoints(croppedL1[i],arr, LASER1_ANGLE);
         DataProcessing::generateXYZ(cloud, arr, croppedL1[i].rows, i, NUM_OF_STEPS, 0);
