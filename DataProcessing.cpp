@@ -1,6 +1,6 @@
 #include "DataProcessing.h"
 
-void DataProcessing::generateXYZ(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float* arr, int arrSize, int currentStep, int numOfSteps, int offset){
+void DataProcessing::generateXYZ(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float* arr, int arrSize, int currentStep, int numOfSteps, float offset){
     int numOfPoints = 0;//holds the actual number of points to be added to the cloud
     for(int i = 0; i < arrSize; i++){
         if(arr[i] > 0)numOfPoints++;
