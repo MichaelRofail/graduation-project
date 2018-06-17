@@ -8,12 +8,12 @@
 #define NUM_OF_STEPS 192
 //the delay between each frame capture in ms 
 #define FRAME_DELAY 5
-#define LASER1_ANGLE (0.52)
-#define LASER2_ANGLE (0.52)//temp
+#define LASER1_ANGLE (0.5236)
+#define LASER2_ANGLE (0.5399)
 #define SMOOTHING_SEARCH_RADIUS 15
-#define BOTTOM_CROP 60
-#define MIDDLE_CROP_CONSTANT 110
-#define LASER2_OFFSET 130//temp
+#define BOTTOM_CROP 50
+#define MIDDLE_CROP_CONSTANT 70
+#define LASER2_OFFSET 119.063
 
 using namespace std;
 
