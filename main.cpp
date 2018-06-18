@@ -13,20 +13,20 @@
 #define NUM_OF_STEPS 192
 //the delay between each frame capture in ms 
 #define FRAME_DELAY 20
-#define LASER_DELAY 300
+#define LASER_DELAY 500
 //camera brightness
 #define BRIGHTNESS 40 
 //angle between laser and normal to view plane in rad
-#define LASER1_ANGLE (0.3272)
-#define LASER2_ANGLE (0.3436)
+#define LASER1_ANGLE (0.5236)
+#define LASER2_ANGLE (0.5399)
 //somoothing radius for resampling
 #define SMOOTHING_SEARCH_RADIUS 15
 //crop the bottom plate
 #define BOTTOM_CROP 10
 //if the camera is off center 
-#define MIDDLE_CROP_CONSTANT 82
+#define MIDDLE_CROP_CONSTANT 10
 //laser offeset in degree
-#define LASER2_OFFSET 80//temp
+#define LASER2_OFFSET 119.063
 
 using namespace std;
 
@@ -38,7 +38,7 @@ int main(){
     Camera.open();
     Hardware::hardwareInit();
     ostringstream ss;
-    cv::Mat laserFrame, frame, flipLaserFrame, flipFrame, pimg, cropImg1, cropImg2;
+    cv::Mat laserFrame, frame, laserFrameC, frameC, flipLaserFrame, flipFrame, flipLaserFrameC, flipFrameC, pimg, cropImg1, cropImg2;
     cv::Mat croppedL1[NUM_OF_STEPS];//stores all the photos after processing
     cv::Mat croppedL2[NUM_OF_STEPS];
 
@@ -63,7 +63,6 @@ int main(){
 
     Hardware::laserOff(1);
     Hardware::laserOff(2);
-    
 
     for(int i = 0; i < NUM_OF_STEPS ;i++){
         cv::waitKey(LASER_DELAY);
@@ -96,9 +95,9 @@ int main(){
         ss.clear();
 
         //process laser 1 images
-        laserFrame = ImageProcessing::crop(laserFrame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
-        frame = ImageProcessing::crop(frame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
-        pimg = ImageProcessing::extractLaser(laserFrame, frame);
+        laserFrameC = ImageProcessing::crop(laserFrame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
+        frameC = ImageProcessing::crop(frame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
+        pimg = ImageProcessing::extractLaser(laserFrameC, frameC);
         croppedL1[i] = pimg;
 
         //capture laser2 image
@@ -117,11 +116,11 @@ int main(){
         ss.clear();
         
         //process laser2 images
-        cv::flip(laserFrame, flipLaserFrame, 0);
-        cv::flip(frame,flipFrame, 0);
-        flipLaserFrame = ImageProcessing::crop(flipLaserFrame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
-        flipFrame = ImageProcessing::crop(flipFrame, top, MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
-        pimg = ImageProcessing::extractLaser(laserFrame, frame);
+        cv::flip(laserFrame, flipLaserFrame, 1);
+        cv::flip(frame,flipFrame, 1);
+        flipLaserFrameC = ImageProcessing::crop(flipLaserFrame, top, -MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
+        flipFrameC = ImageProcessing::crop(flipFrame, top, -MIDDLE_CROP_CONSTANT, BOTTOM_CROP);
+        pimg = ImageProcessing::extractLaser(flipLaserFrameC, flipFrameC);
         croppedL2[i] = pimg;
 
         Hardware::motorMicroStep();
