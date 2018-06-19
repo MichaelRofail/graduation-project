@@ -11,8 +11,8 @@
 #define LASER1_ANGLE (0.5236)
 #define LASER2_ANGLE (0.5399)
 #define SMOOTHING_SEARCH_RADIUS 15
-#define BOTTOM_CROP 50
-#define MIDDLE_CROP_CONSTANT 70
+#define BOTTOM_CROP 10
+#define MIDDLE_CROP_CONSTANT 0
 #define LASER2_OFFSET 119.063
 
 using namespace std;
@@ -81,16 +81,16 @@ int main(void){
     for(int i = 0; i < NUM_OF_STEPS; i++){//post processing loop that extracts points from frames
         ImageProcessing::extractPoints(croppedL1[i],arr, LASER1_ANGLE);
         DataProcessing::generateXYZ(cloud, arr, croppedL1[i].rows, i, NUM_OF_STEPS, 0);
-        ImageProcessing::extractPoints(croppedL2[i],arr, LASER2_ANGLE);
-        DataProcessing::generateXYZ(cloud, arr, croppedL2[i].rows, i, NUM_OF_STEPS, LASER2_OFFSET);
+        //ImageProcessing::extractPoints(croppedL2[i],arr, LASER2_ANGLE);
+        //DataProcessing::generateXYZ(cloud, arr, croppedL2[i].rows, i, NUM_OF_STEPS, LASER2_OFFSET);
     }
+    pcl::io::savePCDFileASCII ("my_point_cloud.pcd", *cloud);//save original cloud
     pcl::PointCloud<pcl::PointNormal> cloudNormals = SurfaceReconstruct::smooth(cloud, SMOOTHING_SEARCH_RADIUS);
 
-    //save and load to remoe normals	
-    pcl::io::savePCDFileASCII ("my_point_cloud.pcd", cloudNormals);
-    pcl::io::loadPCDFile<pcl::PointXYZ>("my_point_cloud.pcd", *cloud);
+    //save and load to remove normals	
+    pcl::io::savePCDFileASCII ("smoothed_point_cloud.pcd", cloudNormals);//save the smoothed cloud
+    pcl::io::loadPCDFile<pcl::PointXYZ>("smoothed_point_cloud.pcd", *cloud);
     
-    pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud, 480);//edit num
-    pcl::io::savePCDFileASCII ("my_point_cloud.pcd", *cloud);//save the cloud to a file
+    pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud, 280);//edit num
     pcl::io::saveOBJFile("model.obj", mesh);
 }
