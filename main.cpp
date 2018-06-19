@@ -15,7 +15,7 @@
 #define FRAME_DELAY 20
 #define LASER_DELAY 500
 //camera brightness
-#define BRIGHTNESS 40 
+#define BRIGHTNESS 50 
 //angle between laser and normal to view plane in rad
 #define LASER1_ANGLE (0.5236)
 #define LASER2_ANGLE (0.5399)
@@ -24,7 +24,7 @@
 //crop the bottom plate
 #define BOTTOM_CROP 10
 //if the camera is off center 
-#define MIDDLE_CROP_CONSTANT 10
+#define MIDDLE_CROP_CONSTANT 0
 //laser offeset in degree
 #define LASER2_OFFSET 119.063
 
@@ -139,13 +139,13 @@ int main(){
         ImageProcessing::extractPoints(croppedL2[i],arr, LASER2_ANGLE);
         DataProcessing::generateXYZ(cloud, arr, croppedL2[i].rows, i, NUM_OF_STEPS, LASER2_OFFSET);
     }
+    pcl::io::savePCDFileASCII ("my_point_cloud.pcd", *cloud);//save original cloud
     pcl::PointCloud<pcl::PointNormal> cloudNormals = SurfaceReconstruct::smooth(cloud, SMOOTHING_SEARCH_RADIUS);
-    
+
     //save and load to remove normals	
-    pcl::io::savePCDFileASCII ("my_point_cloud.pcd", cloudNormals);
-    pcl::io::loadPCDFile<pcl::PointXYZ>("my_point_cloud.pcd", *cloud);
+    pcl::io::savePCDFileASCII ("smoothed_point_cloud.pcd", cloudNormals);//save the smoothed cloud
+    pcl::io::loadPCDFile<pcl::PointXYZ>("smoothed_point_cloud.pcd", *cloud);
     
-    pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud, 480);//edit num
-    pcl::io::savePCDFileASCII ("my_point_cloud.pcd", *cloud);//save the cloud to a file
+    pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud, 280);//edit num
     pcl::io::saveOBJFile("model.obj", mesh);
 }
