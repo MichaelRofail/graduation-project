@@ -12,8 +12,8 @@
 //number of images taken as the object rotates and equal to the rotation steps of the motor
 #define NUM_OF_STEPS 192
 //the delay between each frame capture in ms 
-#define FRAME_DELAY 20
-#define LASER_DELAY 500
+#define FRAME_DELAY 50
+#define LASER_DELAY 400
 //camera brightness
 #define BRIGHTNESS 50 
 //angle between laser and normal to view plane in rad
