@@ -69,7 +69,6 @@ int main(){
         //capture no laser image
         Camera.grab();
         cv::waitKey(FRAME_DELAY);
-        cv::waitKey(LASER_DELAY);
         Camera.retrieve(frame);
 
         ss <<"imgs/";
