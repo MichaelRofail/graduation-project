@@ -26,7 +26,7 @@
 //if the camera is off center 
 #define MIDDLE_CROP_CONSTANT 0
 //laser offeset in degree
-#define LASER2_OFFSET 119.063
+#define LASER2_OFFSET 60.9375
 
 using namespace std;
 
