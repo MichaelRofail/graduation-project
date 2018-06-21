@@ -15,14 +15,14 @@
 #define FRAME_DELAY 50
 #define LASER_DELAY 400
 //camera brightness
-#define BRIGHTNESS 50 
+#define BRIGHTNESS 45 
 //angle between laser and normal to view plane in rad
 #define LASER1_ANGLE (0.5236)
 #define LASER2_ANGLE (0.5399)
 //somoothing radius for resampling
 #define SMOOTHING_SEARCH_RADIUS 15
 //crop the bottom plate
-#define BOTTOM_CROP 10
+#define BOTTOM_CROP 90
 //if the camera is off center 
 #define MIDDLE_CROP_CONSTANT 0
 //laser offeset in degree
