@@ -10,8 +10,8 @@ Mat ImageProcessing::extractLaser(const Mat& laserFrame, const Mat& frame){
     
     GaussianBlur(gray, gray, Size(7,7), 0, 0);
 
-    threshold(gray, thresh, 0, 255, THRESH_BINARY+THRESH_OTSU);
-
+    int threshVal = threshold(gray, thresh, 0, 255, THRESH_TOZERO+THRESH_OTSU);
+    threshold(thresh, thresh, threshVal + 15, 255, THRESH_BINARY+THRESH_OTSU);
     //int morph_size = 1;
     //Mat element = getStructuringElement( 1, Size( 2*morph_size + 1, 2*morph_size+1 ), Point( morph_size, morph_size ) );
     //morphologyEx( thresh, output, 0, element);
