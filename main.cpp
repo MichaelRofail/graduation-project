@@ -22,7 +22,7 @@
 //somoothing radius for resampling
 #define SMOOTHING_SEARCH_RADIUS 15
 //crop the bottom plate
-#define BOTTOM_CROP 90
+#define BOTTOM_CROP 100
 //if the camera is off center 
 #define MIDDLE_CROP_CONSTANT 0
 //laser offeset in degree
