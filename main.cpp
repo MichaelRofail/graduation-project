@@ -135,8 +135,8 @@ int main(){
     for(int i = 0; i < NUM_OF_STEPS; i++){//post processing loop that extracts points from frames
         ImageProcessing::extractPoints(croppedL1[i],arr, LASER1_ANGLE);
         DataProcessing::generateXYZ(cloud, arr, croppedL1[i].rows, i, NUM_OF_STEPS, 0);
-        ImageProcessing::extractPoints(croppedL2[i],arr, LASER2_ANGLE);
-        DataProcessing::generateXYZ(cloud, arr, croppedL2[i].rows, i, NUM_OF_STEPS, LASER2_OFFSET);
+        //ImageProcessing::extractPoints(croppedL2[i],arr, LASER2_ANGLE);
+        //DataProcessing::generateXYZ(cloud, arr, croppedL2[i].rows, i, NUM_OF_STEPS, LASER2_OFFSET);
     }
     pcl::io::savePCDFileASCII ("my_point_cloud.pcd", *cloud);//save original cloud
     pcl::PointCloud<pcl::PointNormal> cloudNormals = SurfaceReconstruct::smooth(cloud, SMOOTHING_SEARCH_RADIUS);
