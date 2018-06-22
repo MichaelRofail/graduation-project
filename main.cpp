@@ -146,6 +146,6 @@ int main(){
     pcl::io::savePCDFileASCII ("smoothed_point_cloud.pcd", cloudNormals);//save the smoothed cloud
     pcl::io::loadPCDFile<pcl::PointXYZ>("smoothed_point_cloud.pcd", *cloud);
     
-    pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud, 280);//edit num
+    pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud, top/2);//edit num
     pcl::io::saveOBJFile("model.obj", mesh);
 }
