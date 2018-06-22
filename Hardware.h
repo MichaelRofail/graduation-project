@@ -19,4 +19,5 @@ public:
     static void hardwareInit(void);
     static void laserOn(int laser);
     static void laserOff(int laser);
+    static void motorOff(void);
 };

@@ -125,6 +125,7 @@ int main(){
         Hardware::motorMicroStep();
     }
     Camera.release();
+    Hardware::motorOff();
 
     float* arr = new float[croppedL1[0].rows];//holds output points from each frame in 2d
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>); //stores the cloud
