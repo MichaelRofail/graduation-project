@@ -8,7 +8,8 @@ pcl::PolygonMesh SurfaceReconstruct::reconstruct(pcl::PointCloud<pcl::PointXYZ>:
     tree->setInputCloud (cloud);
     n.setInputCloud(cloud);
     n.setSearchMethod(tree);
-    n.setKSearch(20);
+    n.setKSearch(0);
+    n.setRadiusSearch(20);
     n.setViewPoint(0, centroidY, 0);//edit
     n.compute(*normals);
 
@@ -23,7 +24,7 @@ pcl::PolygonMesh SurfaceReconstruct::reconstruct(pcl::PointCloud<pcl::PointXYZ>:
     pcl::Poisson<pcl::PointNormal> poisson;
     poisson.setDepth(POISSON_DEPTH);
     poisson.setInputCloud(cloud_with_normals);
-    poisson.setScale(1.001);
+    //.setScale(1.001);
     //poisson.setPointWeight(8);
     pcl::PolygonMesh mesh;
     poisson.reconstruct(mesh);
