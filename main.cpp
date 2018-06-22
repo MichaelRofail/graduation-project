@@ -12,7 +12,7 @@
 #define LASER2_ANGLE (0.5399)
 #define SMOOTHING_SEARCH_RADIUS 15
 #define BOTTOM_CROP 110
-#define MIDDLE_CROP_CONSTANT -50
+#define MIDDLE_CROP_CONSTANT 0
 #define LASER2_OFFSET 60.9375
 
 using namespace std;
