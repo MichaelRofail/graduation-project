@@ -31,7 +31,8 @@
 using namespace std;
 
 int main(){
-
+    system("rm -f model.obj", "~/graduation-project/build/");
+    system("rm -rf *.jpg", "~/graduation-project/build/imgs/");
     raspicam::RaspiCam_Cv Camera;
     Camera.set(CV_CAP_PROP_FORMAT, CV_8UC3);
     Camera.set(CV_CAP_PROP_BRIGHTNESS, BRIGHTNESS);
