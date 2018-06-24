@@ -13,7 +13,7 @@
 #define NUM_OF_STEPS 192
 //the delay between each frame capture in ms 
 #define FRAME_DELAY 50
-#define LASER_DELAY 400
+#define LASER_DELAY 300
 //camera brightness
 #define BRIGHTNESS 45 
 //angle between laser and normal to view plane in rad
