@@ -24,7 +24,7 @@ pcl::PolygonMesh SurfaceReconstruct::reconstruct(pcl::PointCloud<pcl::PointXYZ>:
     pcl::Poisson<pcl::PointNormal> poisson;
     poisson.setDepth(POISSON_DEPTH);
     poisson.setInputCloud(cloud_with_normals);
-    poisson.setScale(1.0001);
+    //poisson.setScale(1.0001);
     //point weight 
     pcl::PolygonMesh mesh;
     poisson.reconstruct(mesh);
