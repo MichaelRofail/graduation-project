@@ -149,4 +149,11 @@ int main(){
     
     pcl::PolygonMesh mesh = SurfaceReconstruct::reconstruct(cloud, top/2);//edit num
     pcl::io::saveOBJFile("model.obj", mesh);
+
+    //to show end of runtrime
+    Hardware::laserOn(1);
+    Hardware::laserOn(2);
+    cv::waitKey(LASER_DELAY);
+    Hardware::laserOff(1);
+    Hardware::laserOff(2);
 }
