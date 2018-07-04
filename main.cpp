@@ -12,7 +12,7 @@
 #define LASER2_ANGLE (0.5399)
 #define SMOOTHING_SEARCH_RADIUS 15
 #define BOTTOM_CROP 110
-#define MIDDLE_CROP_CONSTANT 0
+#define MIDDLE_CROP_CONSTANT -10
 #define LASER2_OFFSET 60.9375
 
 using namespace std;
@@ -81,8 +81,8 @@ int main(void){
     for(int i = 0; i < NUM_OF_STEPS; i++){//post processing loop that extracts points from frames
         ImageProcessing::extractPoints(croppedL1[i],arr, LASER1_ANGLE);
         DataProcessing::generateXYZ(cloud, arr, croppedL1[0].rows, i, NUM_OF_STEPS, 0);
-        ImageProcessing::extractPoints(croppedL2[i],arr, LASER2_ANGLE);
-        DataProcessing::generateXYZ(cloud, arr, croppedL2[0].rows, i, NUM_OF_STEPS, LASER2_OFFSET);
+        //ImageProcessing::extractPoints(croppedL2[i],arr, LASER2_ANGLE);
+        //DataProcessing::generateXYZ(cloud, arr, croppedL2[0].rows, i, NUM_OF_STEPS, LASER2_OFFSET);
     }
     pcl::io::savePCDFileASCII ("my_point_cloud.pcd", *cloud);//save original cloud
     pcl::PointCloud<pcl::PointNormal> cloudNormals = SurfaceReconstruct::smooth(cloud, SMOOTHING_SEARCH_RADIUS);
